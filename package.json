@@ -9,12 +9,19 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@adobe/react-spectrum": "^3.23.0",
+    "@codesandbox/sandpack-react": "^1.17.0",
+    "@spectrum-icons/illustrations": "^3.5.1",
+    "@spectrum-icons/ui": "^3.4.0",
+    "@spectrum-icons/workflow": "^4.0.4",
     "@types/node": "18.11.9",
     "@types/react": "18.0.25",
     "@types/react-dom": "18.0.9",
+    "dprint-node": "^1.0.7",
     "eslint": "8.28.0",
     "eslint-config-next": "13.0.5",
     "next": "13.0.5",
+    "next-transpile-modules": "^10.0.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "typescript": "4.9.3"

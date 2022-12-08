@@ -24,3 +24,24 @@ a {
     background: black;
   }
 }
+
+html,
+body,
+#app,
+#app > div {
+  padding: 0;
+  margin: 0;
+  min-height: 100vh;
+}
+
+header {
+  box-sizing: border-box;
+  justify-content: space-between;
+  align-items: center;
+  display: inline-flex;
+  position: fixed;
+  top: 0;
+  right: 0;
+  margin: 5px;
+}
+
