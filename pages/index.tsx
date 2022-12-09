@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { Key, useEffect, useState } from "react";
 import {
   Grid,
   View,
@@ -21,39 +21,47 @@ import {
   DialogContainer,
   AlertDialog,
   SSRProvider,
-  ComboBox,
+  Picker,
+  TextArea,
 } from "@adobe/react-spectrum";
 import MagicWand from "@spectrum-icons/workflow/MagicWand";
 import Settings from "@spectrum-icons/workflow/Settings";
-// import "./index.css";
 import { Editor } from "./Editor";
 import { TemperatureInfo } from "./info/TemperatureInfo";
 import { ModelInfo } from "./info/ModelInfo";
 import { MaxTokensInfo } from "./info/MaxTokensInfo";
-import prompts from './prompts.json';
+import examples from './examples.json';
+import Head from "next/head";
 
-let getFullPrompt = (userPrompt: string) => {
-  let components = Object.keys(prompts).filter(componentName => userPrompt.includes(componentName));
-  return `/*
-    - Use React Spectrum components to build a React component called App, made with function components and hooks.
-    - Import components from the @adobe/react-spectrum package
+const DEFAULT_PROMPT = `/*
+  You're given a prompt and you need to return a React component that matches the prompt.
+  Use React Spectrum components to build a React component called App, made with function components and hooks.
+  Import components from the @adobe/react-spectrum package
 
-    ${components.map((component) => `description: ${prompts[component].description}\ncomponent: ${prompts[component].example}\n\n`)}
+  Here are some example descriptions with code samples:
+    {{examples}}
 
-    - This app has a ${userPrompt.trim()}.
-*/`;}
+  Your prompt is: {{prompt}}.
+*/`;
 
 const STOP_SEQUENCE = 'export default App;';
 
+let getFullPrompt = (prompt: string, userInput: string) => {
+  let components = Object.keys(examples).filter(componentName => userInput.includes(componentName));
+  let examplesString = components.map((component) => `description: ${examples[component].description}\ncomponent: ${examples[component].example}\n\n`).join('\n');
+  return prompt
+    .replace('{{prompt}}', userInput)
+    .replace('{{examples}}', examplesString);
+};
+
 export default function Home(): JSX.Element {
-  let [promptValue, setPromptValue] = useState("");
+  let [userInput, setUserInput] = useState("");
   let [isLoading, setIsLoading] = useState(false);
   let [code, setCode] = useState(null);
   let [alert, setAlert] = useState<null | string>(null);
+  let [prompt, setPrompt] = useState(DEFAULT_PROMPT); 
 
-  let [selectedModel, setSelectedModel] = useState(
-    "code-davinci-002" as React.Key
-  );
+  let [selectedModel, setSelectedModel] = useState<Key>("code-davinci-002");
   let [temperature, setTemperature] = useState(0);
   let [maxTokens, setMaxTokens] = useState(2048);
   let [models, setModels] = useState([])
@@ -61,22 +69,6 @@ export default function Home(): JSX.Element {
   useEffect(() => {
     fetchModels();
   }, []);
-
-  let modelOptions = [
-    {
-      name: "Codex",
-      children: [{ id: "code-davinci-002" }, { id: "code-cushman-001" }],
-    },
-    {
-      name: "GPT-3",
-      children: [
-        { id: "text-davinci-002" },
-        { id: "text-curie-001" },
-        { id: "text-babbage-001" },
-        { id: "text-ada-001" },
-      ],
-    },
-  ];
 
   let fetchCompletion = async () => {
     setIsLoading(true);
@@ -89,7 +81,7 @@ export default function Home(): JSX.Element {
         },
         body: JSON.stringify({
           model: selectedModel,
-          prompt: getFullPrompt(promptValue),
+          prompt: getFullPrompt(prompt, userInput),
           temperature,
           max_tokens: maxTokens,
           stop: STOP_SEQUENCE
@@ -99,11 +91,9 @@ export default function Home(): JSX.Element {
       if (json.error) {
         setAlert(json.error.message);
       } else {
-        console.log(json);
         setCode(json.choices[0].text.trim().concat(`\n\n${STOP_SEQUENCE}`));
       }
     } catch (error) {
-      // TODO: check error message
       setAlert(error);
     } finally {
       setIsLoading(false);
@@ -123,7 +113,6 @@ export default function Home(): JSX.Element {
         setAlert(json.error.message);
       } else {
         setModels(json.data);
-        console.log(json);
       }
     } catch (error) {
       // TODO: check error message
@@ -134,7 +123,7 @@ export default function Home(): JSX.Element {
   };
 
   let handleGenerate = () => {
-    if (promptValue.trim() === '') {
+    if (userInput.trim() === '') {
       setAlert('Please provide a prompt');
     } else {
       fetchCompletion();
@@ -144,6 +133,9 @@ export default function Home(): JSX.Element {
   return (
     <SSRProvider>
       <Provider theme={defaultTheme} locale="en-US">
+        <Head>
+          <title>Text2UI with React Spectrum</title>
+        </Head>
         <header>
           <DialogTrigger>
             <ActionButton aria-label="Settings">
@@ -156,15 +148,18 @@ export default function Home(): JSX.Element {
                 <Content>
                   <Flex direction="column">
                     <Flex marginTop="size-100" marginBottom="size-100">
-                      <ComboBox
+                      <TextArea label="Prompt" value={prompt} onChange={setPrompt} width="100%" />
+                    </Flex>
+                    <Flex marginTop="size-100" marginBottom="size-100">
+                      <Picker
                         label="Model"
-                        defaultItems={models}
+                        items={models}
                         selectedKey={selectedModel}
                         onSelectionChange={setSelectedModel}
                         contextualHelp={ <ModelInfo />}
                       >
                         {item => <Item key={item.id} textValue={item.id}>{item.id}</Item>}
-                      </ComboBox>
+                      </Picker>
                     </Flex>
                     <Flex marginTop="size-100" marginBottom="size-100">
                       <Slider
@@ -183,7 +178,7 @@ export default function Home(): JSX.Element {
                         value={maxTokens}
                         onChange={setMaxTokens}
                         minValue={0}
-                        maxValue={4096}
+                        maxValue={8000}
                         contextualHelp={<MaxTokensInfo />}
                       />
                     </Flex>
@@ -202,9 +197,10 @@ export default function Home(): JSX.Element {
           </DialogTrigger>
         </header>
         <Grid
+          UNSAFE_className="home"
           areas={["header", "input", "code"]}
           columns={["1fr"]}
-          rows={["size-2000", "size-2000", "auto"]}
+          rows={["size-2000", "size-1000", "auto"]}
           height="100%"
           gap="size-100"
         >
@@ -241,8 +237,8 @@ export default function Home(): JSX.Element {
                 autoFocus
                 minWidth="size-6000"
                 label="Describe your app"
-                value={promptValue}
-                onChange={setPromptValue}
+                value={userInput}
+                onChange={setUserInput}
               />
               <Button
                 isDisabled={isLoading}
@@ -255,7 +251,7 @@ export default function Home(): JSX.Element {
               </Button>
             </form>
           </View>
-          <View maxWidth="100%" gridArea="code" padding="size-100" paddingStart="size-1000" paddingEnd="size-1000">
+          <View maxWidth="100%" gridArea="code" padding="size-500" margin="auto">
             <Editor code={code} isLoading={isLoading} />
           </View>
         </Grid>

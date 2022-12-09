@@ -27,8 +27,9 @@ a {
 
 html,
 body,
-#app,
-#app > div {
+body > div,
+body > div > div,
+.home {
   padding: 0;
   margin: 0;
   min-height: 100vh;
