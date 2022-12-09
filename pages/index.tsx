@@ -48,7 +48,7 @@ const STOP_SEQUENCE = 'export default App;';
 
 let getFullPrompt = (prompt: string, userInput: string) => {
   let components = Object.keys(examples).filter(componentName => userInput.includes(componentName));
-  let examplesString = components.map((component) => `description: ${examples[component].description}\ncomponent: ${examples[component].example}\n\n`).join('\n');
+  let examplesString = components.map((component) => examples[component].map((example) => `description: ${example.description}\n    code: ${example.code}\n\n`).join('\n')).join('\n');
   return prompt
     .replace('{{prompt}}', userInput)
     .replace('{{examples}}', examplesString);
