@@ -1,6 +1,6 @@
 # Text2UI with React Spectrum
 
-Use NLP to generate working UIs with React Spectrum components. Powered by OpenAI Codex.
+Use a text prompt to generate working UIs with React Spectrum components. Powered by OpenAI Codex.
 
 ## Get Started
 
@@ -12,6 +12,10 @@ Create a `.env.local` file in the root of the project and add your OpenAI API ke
 OPENAI_KEY=sk-...
 ```
 
+### Install
+
+`yarn install`
+
 ### Start the app
 
 `yarn dev`
@@ -21,7 +25,7 @@ Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 ### How it works
 
 1. User inputs a prompt.
-2. The app gets some examples to include in it's request to OpenAI's Codex. For example, if the prompt includes the word `table`, it will include an example of React Spectrum's TableView in it's prompt to help guide it to a better output.
+2. The app gets some examples to include in it's request to Codex. For example, if the prompt includes the word `table`, it will include examples of React Spectrum's TableView in it's prompt to help guide it to a better output.
 3. The API returns it's best guess at what the user wants to build.
 
 ### Settings
