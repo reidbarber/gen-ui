@@ -70,6 +70,27 @@ export default function Home(): JSX.Element {
     fetchModels();
   }, []);
 
+  let fetchModels = async () => {
+    try {
+      let res = await fetch(`api/models`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        }
+      });
+      let json = await res.json();
+      if (json.error) {
+        setAlert(json.error.message);
+      } else {
+        setModels(json.data);
+      }
+    } catch (error) {
+      setAlert(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   let fetchCompletion = async () => {
     setIsLoading(true);
 
@@ -100,28 +121,6 @@ export default function Home(): JSX.Element {
     }
   };
 
-  let fetchModels = async () => {
-    try {
-      let res = await fetch(`api/models`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        }
-      });
-      let json = await res.json();
-      if (json.error) {
-        setAlert(json.error.message);
-      } else {
-        setModels(json.data);
-      }
-    } catch (error) {
-      // TODO: check error message
-      setAlert(error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   let handleGenerate = () => {
     if (userInput.trim() === '') {
       setAlert('Please provide a prompt');
@@ -137,7 +136,7 @@ export default function Home(): JSX.Element {
           <title>Text2UI with React Spectrum</title>
         </Head>
         <header>
-          <DialogTrigger>
+          <DialogTrigger isDismissable>
             <ActionButton aria-label="Settings">
               <Settings />
             </ActionButton>
@@ -184,14 +183,6 @@ export default function Home(): JSX.Element {
                     </Flex>
                   </Flex>
                 </Content>
-                <ButtonGroup>
-                  <Button variant="secondary" onPress={close}>
-                    Cancel
-                  </Button>
-                  <Button variant="cta" onPress={close} autoFocus>
-                    Confirm
-                  </Button>
-                </ButtonGroup>
               </Dialog>
             )}
           </DialogTrigger>
