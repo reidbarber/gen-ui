@@ -40,5 +40,5 @@ The user can adjust some settings to try to get better results
 
 - **Prompt** - Edit the prompt to get different results from Codex. `{{examples}}` and `{{prompt}}` will be replaced with the examples and prompt respectively before being sent to Codex.
 - **Model** - The model to use. The default is `code-davinci-002` which is the most powerful model.
-- **Temperature** - The higher the temperature, the more random the completions. This should usually stay at 0 or very low for code use cases.
+- **Temperature** - The higher the temperature, the more random the completions. This should usually stay at `0` or very low for code generation use cases.
 - **Max tokens** - The maximum number of tokens to return. This can be increased if more code is expected in an output.
