@@ -6,6 +6,8 @@ Use a text prompt to generate working UIs with React Spectrum components. Powere
 
 ### Get an [OpenAI API Key](https://beta.openai.com/account/api-keys)
 
+Note: Codex usage is [free](https://beta.openai.com/docs/models/codex) while in limited beta.
+
 Create a `.env.local` file in the root of the project and add your OpenAI API key:
 
 ```bash
