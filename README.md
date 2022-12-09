@@ -2,6 +2,10 @@
 
 Use a text prompt to generate working UIs with React Spectrum components. Powered by OpenAI Codex.
 
+<p align="center">
+  <img width="545" alt="Screenshot of Text2UI, showing a prompt with a table with every US State and its population, along with the code returned by Text2UI and rendered" src="https://user-images.githubusercontent.com/8961049/206802886-34a97fe2-c453-4df3-b7b7-7fe23620de1d.png">
+</p>
+
 ## Get Started
 
 ### Get an [OpenAI API Key](https://beta.openai.com/account/api-keys)
