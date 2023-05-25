@@ -1,6 +1,6 @@
 # Text2UI with React Spectrum
 
-Use a text prompt to generate working UIs with React Spectrum components. Powered by OpenAI Codex.
+Use a text prompt to generate working UIs with React Spectrum components. Powered by OpenAI's GPT-4.
 
 <p align="center">
   <img width="545" alt="Screenshot of Text2UI, showing a prompt with a table with every US State and its population, along with the code returned by Text2UI and rendered" src="https://user-images.githubusercontent.com/8961049/206802886-34a97fe2-c453-4df3-b7b7-7fe23620de1d.png">
@@ -9,8 +9,6 @@ Use a text prompt to generate working UIs with React Spectrum components. Powere
 ## Get Started
 
 ### Get an [OpenAI API Key](https://beta.openai.com/account/api-keys)
-
-Note: Codex usage is [free](https://beta.openai.com/docs/models/codex) while in limited beta.
 
 Create a `.env.local` file in the root of the project and add your OpenAI API key:
 
