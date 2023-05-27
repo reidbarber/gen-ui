@@ -1,7 +1,6 @@
 const fs = require("fs");
 const path = require("path");
 const https = require("https");
-const { execSync } = require("child_process");
 
 async function checkRepo() {
   const localRepoPath = path.join(".data", "react-spectrum");
@@ -23,9 +22,10 @@ async function checkRepo() {
     });
   });
 
-  const localCommitHash = execSync("git rev-parse HEAD", { cwd: localRepoPath })
-    .toString()
-    .trim();
+  const localCommitHash = fs.readFileSync(
+    path.join(localRepoPath, ".git", "refs", "heads", "main"),
+    "utf8"
+  ).trim();
 
   return latestCommitHash === localCommitHash ? "up-to-date" : "outdated";
 }
