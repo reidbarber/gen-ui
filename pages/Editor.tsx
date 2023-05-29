@@ -1,4 +1,4 @@
-import { Sandpack} from "@codesandbox/sandpack-react";
+import { Sandpack } from "@codesandbox/sandpack-react";
 import React from "react";
 
 const indexFile = `import React from "react";
@@ -45,8 +45,8 @@ import NoSearchResults from '@spectrum-icons/illustrations/NoSearchResults';
 export default function App() {
   return(
     <Flex direction="column" justifyContent="center" alignItems="center" height="100vh">
-      <Heading>Get Started</Heading>
-      <Content>Describe your app in the provided prompt.</Content>
+      <Heading>Live Preview</Heading>
+      <Content>To get started, describe your app in the prompt.</Content>
     </Flex>
   );
 }`;
@@ -64,6 +64,7 @@ export default function App() {
 export function Editor({ code, isLoading = false }): JSX.Element {
   return (
     <Sandpack
+      theme="dark"
       files={{
         "/App.js": {
           code: isLoading ? loadingCode : code || defaultCode,

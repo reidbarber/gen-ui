@@ -25,6 +25,7 @@ import {
   TextArea,
   ComboBox,
   ListView,
+  Link,
 } from "@adobe/react-spectrum";
 import MagicWand from "@spectrum-icons/workflow/MagicWand";
 import Settings from "@spectrum-icons/workflow/Settings";
@@ -196,213 +197,164 @@ export default function Home(): JSX.Element {
         <Head>
           <title>GenUI | React Spectrum</title>
         </Head>
-        <header>
-          <DialogTrigger isDismissable>
-            <ActionButton aria-label="Settings">
-              <Settings />
-            </ActionButton>
-            {(close) => (
-              <Dialog size="L">
-                <Heading>Settings</Heading>
-                <Divider />
-                <Content>
-                  <Flex direction="column">
-                    <Flex marginTop="size-100" marginBottom="size-100">
-                      <TextArea
-                        label="Prompt"
-                        value={prompt}
-                        onChange={setPrompt}
-                        width="100%"
-                      />
-                    </Flex>
-                    <Flex marginTop="size-100" marginBottom="size-100">
-                      <ComboBox
-                        label="Model"
-                        defaultItems={models}
-                        selectedKey={selectedModel}
-                        onSelectionChange={setSelectedModel}
-                        contextualHelp={<ModelInfo />}
-                      >
-                        {(item) => (
-                          <Item key={item.id} textValue={item.id}>
-                            {item.id}
-                          </Item>
-                        )}
-                      </ComboBox>
-                    </Flex>
-                    <Flex marginTop="size-100" marginBottom="size-100">
-                      <Slider
-                        label="Temperature"
-                        value={temperature}
-                        onChange={setTemperature}
-                        minValue={0}
-                        maxValue={1}
-                        step={0.05}
-                        contextualHelp={<TemperatureInfo />}
-                      />
-                    </Flex>
-                    <Flex marginTop="size-100" marginBottom="size-100">
-                      <NumberField
-                        label="Max tokens"
-                        value={maxTokens}
-                        onChange={setMaxTokens}
-                        minValue={0}
-                        maxValue={8000}
-                        contextualHelp={<MaxTokensInfo />}
-                      />
-                    </Flex>
-                  </Flex>
-                </Content>
-              </Dialog>
-            )}
-          </DialogTrigger>
-        </header>
-        <Grid
-          areas={[
-            "header header",
-            "prompt  code",
-            "timeline code",
-            "timeline  code",
-            "timeline  code",
-          ]}
-          columns={["2fr", "4fr"]}
-          rows={["size-1000", "auto"]}
-          height="100vh"
-          gap="size-100"
-        >
-          <View gridArea="header">
-            <h1>GenUI with React Spectrum</h1>
-          </View>
-          <View
-            borderWidth="thin"
-            borderColor="light"
-            borderRadius="medium"
-            gridArea="prompt"
+        <View padding="size-100" height="100%">
+          <Grid
+            areas={[
+              "header header",
+              "prompt  code",
+              "timeline code",
+              "timeline  code",
+              "timeline  code",
+            ]}
+            columns={["2fr", "4fr"]}
+            rows={["size-1000", "auto"]}
+            height="100%"
+            gap="size-100"
           >
-            <h2>Prompt</h2>
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                handleCreate();
-              }}
-              style={{
-                display: "flex",
-                alignItems: "flex-end",
-                justifyContent: "center",
-              }}
-            >
-              <TextArea
-                name="prompt"
-                autoComplete="off"
-                autoFocus
-                minWidth="size-6000"
-                label="Describe your app"
-                value={userInput}
-                onChange={setUserInput}
-              />
-              <Button
-                isDisabled={isLoading}
-                variant="cta"
-                marginStart="size-100"
-                onPress={() => handleCreate()}
+            <View gridArea="header" padding="size-100">
+              <header
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                }}
               >
-                <MagicWand />
-                <Text>Create</Text>
-              </Button>
-            </form>
-          </View>
-          <View gridArea="timeline">
-            <h2>Timeline</h2>
-            <ListView
-              items={timeLine}
-              width="100%"
-              maxWidth={600}
-              height="100%"
-              margin="auto"
-            >
-              {(item) => (
-                <Item textValue={item.title}>
-                  <Text>
-                    {item.index + 1}. {item.title}
-                  </Text>
-                  <Text slot="description">{item.type}</Text>
-                  <ActionButton onPress={() => setSelectedTimelineItem(item)}>
+                <h1>GenUI with React Spectrum</h1>
+
+                <DialogTrigger isDismissable>
+                  <ActionButton isQuiet aria-label="About" margin="size-100">
                     <InfoOutline />
                   </ActionButton>
-                </Item>
-              )}
-            </ListView>
-          </View>
-          <View gridArea="code">
-            <Editor code={code} isLoading={isLoading} />
-          </View>
-        </Grid>
-        <Grid
-          UNSAFE_className="home"
-          areas={["header", "input", "code"]}
-          columns={["1fr"]}
-          rows={["size-2000", "size-1000", "auto"]}
-          height="100%"
-          gap="size-100"
-        >
-          <View padding="size-100" gridArea="header">
-            <Flex
-              direction="column"
-              justifyContent="center"
-              alignItems="center"
-              height="100%"
+                  {() => (
+                    <Dialog size="L">
+                      <Heading>About</Heading>
+                      <Divider />
+                      <Content>
+                        GenUI is an application for helping you generate working
+                        React Spectrum apps based on a prompt.
+                        <br />
+                        <br />
+                        Your prompt can be as simple or detailed as needed, and
+                        you can include specific React Spectrum components that
+                        you would like it to use if you like.
+                        <br />
+                        <br />
+                        When sending a request, you'll get a detailed overview
+                        of the app, as well as working code delivered in a live
+                        code sandbox.
+                        <br />
+                        <br />
+                        From there, you can also prompt the model to fix any
+                        bugs that the your app may have. GenUI will have access
+                        to any error messages, so it will include this as
+                        context, along with an optional text prompt if you would
+                        like to include hints as to how to fix it.
+                        <br />
+                        <br />
+                        You can also add additional features to your existing
+                        app using the text prompt.
+                        <br />
+                        <br />
+                        Each change will be included in a timeline view, so you
+                        can revert back to any state of the app at any time you
+                        need to. Your sandbox can be forked at any time, and
+                        initialized as a GitHub repo. Or, you can save your
+                        timeline locally, and import it later in a future
+                        session.
+                        <br />
+                        <br />
+                        <Divider size="S" marginBottom="size-100" />
+                        <Link>
+                          <a
+                            href="https://react-spectrum.adobe.com"
+                            target="_blank"
+                          >
+                            React Spectrum Documentation
+                          </a>
+                        </Link>
+                      </Content>
+                    </Dialog>
+                  )}
+                </DialogTrigger>
+              </header>
+            </View>
+            <View
+              borderWidth="thin"
+              borderColor="light"
+              borderRadius="medium"
+              gridArea="prompt"
+              padding="size-100"
             >
-              <h1 className="spectrum-Heading1 spectrum-Article articleHeader">
-                GenUI with React Spectrum
-              </h1>
-              <p className="spectrum-Body3">
-                Create working UIs with React Spectrum components from text
-                prompts.
-              </p>
-            </Flex>
-          </View>
-          <View gridArea="input" padding="size-100">
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                handleCreate();
-              }}
-              style={{
-                display: "flex",
-                alignItems: "flex-end",
-                justifyContent: "center",
-              }}
-            >
-              <TextArea
-                name="prompt"
-                autoComplete="off"
-                autoFocus
-                minWidth="size-6000"
-                label="Describe your app"
-                value={userInput}
-                onChange={setUserInput}
-              />
-              <Button
-                isDisabled={isLoading}
-                variant="cta"
-                marginStart="size-100"
-                onPress={() => handleCreate()}
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  handleCreate();
+                }}
+                style={{
+                  height: "100%",
+                }}
               >
-                <MagicWand />
-                <Text>Create</Text>
-              </Button>
-            </form>
-          </View>
-          <View
-            width="100%"
-            maxWidth="1800px"
-            gridArea="code"
-            padding="size-500"
-            margin="auto"
-          >
-            <Editor code={code} isLoading={isLoading} />
-          </View>
-        </Grid>
+                <TextArea
+                  name="prompt"
+                  autoComplete="off"
+                  autoFocus
+                  minWidth="size-6000"
+                  label="Describe your app"
+                  value={userInput}
+                  onChange={setUserInput}
+                  height="100%"
+                  width="100%"
+                />
+                <Flex
+                  justifyContent="end"
+                  position="relative"
+                  bottom={50}
+                  right={10}
+                >
+                  <Button
+                    isDisabled={isLoading}
+                    variant="cta"
+                    marginStart="size-100"
+                    marginTop="size-100"
+                    onPress={() => handleCreate()}
+                  >
+                    <MagicWand />
+                    <Text>Create</Text>
+                  </Button>
+                </Flex>
+              </form>
+            </View>
+            <View
+              gridArea="timeline"
+              padding="size-100"
+              borderWidth="thin"
+              borderColor="light"
+              borderRadius="medium"
+            >
+              <h2>Timeline</h2>
+              <ListView
+                items={timeLine}
+                width="100%"
+                maxWidth={600}
+                margin="auto"
+              >
+                {(item) => (
+                  <Item textValue={item.title}>
+                    <Text>
+                      {item.index + 1}. {item.title}
+                    </Text>
+                    <Text slot="description">{item.type}</Text>
+                    <ActionButton onPress={() => setSelectedTimelineItem(item)}>
+                      <InfoOutline />
+                    </ActionButton>
+                  </Item>
+                )}
+              </ListView>
+            </View>
+            <View gridArea="code">
+              <Editor code={code} isLoading={isLoading} />
+            </View>
+          </Grid>
+        </View>
 
         <DialogContainer onDismiss={() => setAlert(null)}>
           {alert && (
