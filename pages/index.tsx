@@ -6,7 +6,6 @@ import {
   Provider,
   Button,
   Text,
-  TextField,
   ActionButton,
   DialogTrigger,
   Heading,
@@ -15,15 +14,11 @@ import {
   Divider,
   ButtonGroup,
   Flex,
-  Slider,
-  NumberField,
   Item,
   DialogContainer,
   AlertDialog,
   SSRProvider,
-  Picker,
   TextArea,
-  ComboBox,
   ListView,
   Link,
 } from "@adobe/react-spectrum";
@@ -33,21 +28,9 @@ import { Editor } from "./Editor";
 import { TemperatureInfo } from "./info/TemperatureInfo";
 import { ModelInfo } from "./info/ModelInfo";
 import { MaxTokensInfo } from "./info/MaxTokensInfo";
-import examples from "./examples.json";
 import Head from "next/head";
-import Info from "@spectrum-icons/workflow/Info";
 import InfoOutline from "@spectrum-icons/workflow/InfoOutline";
-
-const DEFAULT_PROMPT = `You're an expert AI programming assistant
-- Follow the user's requirements carefully & to the letter
-- First think step-by-step - describe your plan for what to build in psuedocode, written out in great detail
-- Minimize any prose
-- All components are from the React Spectrum library: '@adobe/react-spectrum'
-
-Here is the user's prompt: {{prompt}}.
-`;
-
-const STOP_SEQUENCE = "export default App;";
+import { ThemeSwitcher } from "./ThemeSwitcher";
 
 type TimelineItem = {
   id: number;
@@ -58,60 +41,16 @@ type TimelineItem = {
   outline?: string;
 };
 
-let timeLine: TimelineItem[] = [
-  {
-    id: 1,
-    index: 0,
-    title: "Created TODO app",
-    description: "Created a TODO app using React Spectrum",
-    type: "create",
-    outline: `1. Create a new React Spectrum project
-    2. Create a new file called 'TodoItem.tsx'
-    3. Create a new file called 'TodoList.tsx'
-    4. Create a new file called 'TodoApp.tsx'
-    5. Create a new file called 'index.tsx'
-    6. Create a new file called 'styles.css'
-    7. Create a new file called 'TodoItem.css'  
-    8. Create a new file called 'TodoList.css'
-    9. Create a new file called 'TodoApp.css'`,
-  },
-  {
-    id: 2,
-    index: 1,
-    title: "Fix bugs",
-    description: "Fixed initial bugs in the TODO app",
-    type: "fix",
-    outline: `1. Fix the bug where the TODO app doesn't render`,
-  },
-];
-
-let getFullPrompt = (prompt: string, userInput: string) => {
-  // let components = Object.keys(examples).filter((componentName) =>
-  //   userInput.includes(componentName)
-  // );
-  // let examplesString = components
-  //   .map((component) =>
-  //     examples[component]
-  //       .map(
-  //         (example) =>
-  //           `description: ${example.description}\n    code: ${example.code}\n\n`
-  //       )
-  //       .join("\n")
-  //   )
-  //   .join("\n");
-  return prompt.replace("{{prompt}}", userInput);
-  // .replace("{{examples}}", examplesString);
-};
-
 export default function Home(): JSX.Element {
   let [userInput, setUserInput] = useState("");
   let [isLoading, setIsLoading] = useState(false);
   let [code, setCode] = useState(null);
+  let [files, setFiles] = useState([]);
   let [alert, setAlert] = useState<null | string>(null);
-  let [prompt, setPrompt] = useState(DEFAULT_PROMPT);
   let [showTinelineModal, setShowTimelineModal] = useState(false);
   let [selectedTimelineItem, setSelectedTimelineItem] =
     useState<TimelineItem>(null);
+  let [timeline, setTimeline] = useState<TimelineItem[]>([]);
 
   let [selectedModel, setSelectedModel] = useState<Key>("code-davinci-002");
   let [temperature, setTemperature] = useState(0);
@@ -155,18 +94,56 @@ export default function Home(): JSX.Element {
         },
         body: JSON.stringify({
           model: selectedModel,
-          prompt: getFullPrompt(prompt, userInput),
+          prompt: userInput,
           temperature,
           max_tokens: maxTokens,
-          stop: STOP_SEQUENCE,
         }),
       });
       let json = await res.json();
       if (json.error) {
         setAlert(json.error.message);
       } else {
-        console.log(json.response);
-        setCode(json.response.trim().concat(`\n\n${STOP_SEQUENCE}`));
+        let id = timeline.length + 1;
+        let response = json.response.trim();
+        let summary = response
+          .split("## Summary")[1]
+          .split("## Plan")[0]
+          .trim();
+        let plan = response.split("## Plan")[1].split("## Code")[0].trim();
+        let code = response.split("## Code")[1].trim();
+        // Create a JSON object from the code, where each code block is a file.
+        // the header of each block has a fifilename="filename" attribute.
+        // This will be used to create the files object for the sandpack.
+        // JSON object will look like this:
+        // {
+        //   "App.js": {
+        // "code": "..."
+        //   },
+        let files = JSON.parse(
+          `{${code
+            .split("```")
+            .filter((_, i) => i % 2 === 1)
+            .map((code) => {
+              let filename = code.split("filename=")[1].split("\n")[0];
+              return `"${filename}": {"code": \`${code}\`}`;
+            })
+            .join(",")}}`
+        );
+        setFiles(files);
+        saveTimelineCode(id, JSON.stringify(files));
+
+        setCode(json.response.trim());
+        setTimeline([
+          ...timeline,
+          {
+            id,
+            index: timeline.length,
+            title: summary,
+            description: plan,
+            type: "create",
+          },
+        ]);
+        saveTimelineCode(id, code);
       }
     } catch (error) {
       setAlert(error);
@@ -183,17 +160,19 @@ export default function Home(): JSX.Element {
     }
   };
 
-  let getTimeLineItemCode = (id: number) => {
+  let getTimelineItemCode = (id: number) => {
     return localStorage.getItem(`timeline-item-${id}-code`);
   };
 
-  let saveTimeLineCode = (id: number, code: string) => {
+  let saveTimelineCode = (id: number, code: string) => {
     localStorage.setItem(`timeline-item-${id}-code`, code);
   };
 
+  let [colorScheme, setColorScheme] = useState(undefined);
+
   return (
     <SSRProvider>
-      <Provider theme={defaultTheme} locale="en-US">
+      <Provider theme={defaultTheme} locale="en-US" colorScheme={colorScheme}>
         <Head>
           <title>GenUI | React Spectrum</title>
         </Head>
@@ -207,7 +186,7 @@ export default function Home(): JSX.Element {
               "timeline  code",
             ]}
             columns={["2fr", "4fr"]}
-            rows={["size-1000", "auto"]}
+            rows={["size-800", "auto"]}
             height="100%"
             gap="size-100"
           >
@@ -216,65 +195,68 @@ export default function Home(): JSX.Element {
                 style={{
                   display: "flex",
                   alignItems: "center",
+                  justifyContent: "space-between",
                 }}
               >
-                <h1>GenUI with React Spectrum</h1>
-
-                <DialogTrigger isDismissable>
-                  <ActionButton isQuiet aria-label="About" margin="size-100">
-                    <InfoOutline />
-                  </ActionButton>
-                  {() => (
-                    <Dialog size="L">
-                      <Heading>About</Heading>
-                      <Divider />
-                      <Content>
-                        GenUI is an application for helping you generate working
-                        React Spectrum apps based on a prompt.
-                        <br />
-                        <br />
-                        Your prompt can be as simple or detailed as needed, and
-                        you can include specific React Spectrum components that
-                        you would like it to use if you like.
-                        <br />
-                        <br />
-                        When sending a request, you'll get a detailed overview
-                        of the app, as well as working code delivered in a live
-                        code sandbox.
-                        <br />
-                        <br />
-                        From there, you can also prompt the model to fix any
-                        bugs that the your app may have. GenUI will have access
-                        to any error messages, so it will include this as
-                        context, along with an optional text prompt if you would
-                        like to include hints as to how to fix it.
-                        <br />
-                        <br />
-                        You can also add additional features to your existing
-                        app using the text prompt.
-                        <br />
-                        <br />
-                        Each change will be included in a timeline view, so you
-                        can revert back to any state of the app at any time you
-                        need to. Your sandbox can be forked at any time, and
-                        initialized as a GitHub repo. Or, you can save your
-                        timeline locally, and import it later in a future
-                        session.
-                        <br />
-                        <br />
-                        <Divider size="S" marginBottom="size-100" />
-                        <Link>
-                          <a
-                            href="https://react-spectrum.adobe.com"
-                            target="_blank"
-                          >
-                            React Spectrum Documentation
-                          </a>
-                        </Link>
-                      </Content>
-                    </Dialog>
-                  )}
-                </DialogTrigger>
+                <Flex alignItems="center">
+                  <h1 style={{ margin: "0" }}>GenUI with React Spectrum</h1>
+                  <DialogTrigger isDismissable>
+                    <ActionButton isQuiet aria-label="About" margin="size-100">
+                      <InfoOutline />
+                    </ActionButton>
+                    {() => (
+                      <Dialog size="L">
+                        <Heading>About</Heading>
+                        <Divider />
+                        <Content>
+                          GenUI is an application for helping you generate
+                          working React Spectrum apps based on a prompt.
+                          <br />
+                          <br />
+                          Your prompt can be as simple or detailed as needed,
+                          and you can include specific React Spectrum components
+                          that you would like it to use if you like.
+                          <br />
+                          <br />
+                          When sending a request, you'll get a detailed overview
+                          of the app, as well as working code delivered in a
+                          live code sandbox.
+                          <br />
+                          <br />
+                          From there, you can also prompt the model to fix any
+                          bugs that the your app may have. GenUI will have
+                          access to any error messages, so it will include this
+                          as context, along with an optional text prompt if you
+                          would like to include hints as to how to fix it.
+                          <br />
+                          <br />
+                          You can also add additional features to your existing
+                          app using the text prompt.
+                          <br />
+                          <br />
+                          Each change will be included in a timeline view, so
+                          you can revert back to any state of the app at any
+                          time you need to. Your sandbox can be forked at any
+                          time, and initialized as a GitHub repo. Or, you can
+                          save your timeline locally, and import it later in a
+                          future session.
+                          <br />
+                          <br />
+                          <Divider size="S" marginBottom="size-100" />
+                          <Link>
+                            <a
+                              href="https://react-spectrum.adobe.com"
+                              target="_blank"
+                            >
+                              React Spectrum Documentation
+                            </a>
+                          </Link>
+                        </Content>
+                      </Dialog>
+                    )}
+                  </DialogTrigger>
+                </Flex>
+                <ThemeSwitcher setColorScheme={setColorScheme} />
               </header>
             </View>
             <View
@@ -329,12 +311,13 @@ export default function Home(): JSX.Element {
               borderWidth="thin"
               borderColor="light"
               borderRadius="medium"
+              height="100%"
             >
-              <h2>Timeline</h2>
+              <h2 id="timeline-header">Timeline</h2>
               <ListView
-                items={timeLine}
+                aria-labelledby="timeline-header"
+                items={timeline}
                 width="100%"
-                maxWidth={600}
                 margin="auto"
               >
                 {(item) => (
@@ -378,7 +361,10 @@ export default function Home(): JSX.Element {
               <Divider />
               <Content>
                 {selectedTimelineItem.outline}
-                <Editor code={getTimeLineItemCode(selectedTimelineItem.id)} />
+                <Editor
+                  code={null}
+                  files={getTimelineItemCode(selectedTimelineItem.id)}
+                />
               </Content>
               <ButtonGroup>
                 <Button

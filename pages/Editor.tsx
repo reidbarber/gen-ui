@@ -1,7 +1,8 @@
+import { useProvider } from "@adobe/react-spectrum";
 import { Sandpack } from "@codesandbox/sandpack-react";
 import React from "react";
 
-const indexFile = `import React from "react";
+const getIndexFile = (colorScheme) => `import React from "react";
 import { createRoot } from "react-dom/client";
 import { Provider, defaultTheme } from "@adobe/react-spectrum";
 import App from "./App";
@@ -9,7 +10,7 @@ import App from "./App";
 const container = document.getElementById("app");
 const root = createRoot(container);
 root.render(
-  <Provider theme={defaultTheme}>
+  <Provider theme={defaultTheme} colorScheme="${colorScheme}">
     <App />
   </Provider>
 );
@@ -61,23 +62,25 @@ export default function App() {
   );
 }`;
 
-export function Editor({ code, isLoading = false }): JSX.Element {
+export function Editor({ code, isLoading = false, files }): JSX.Element {
+  let { colorScheme } = useProvider();
   return (
     <Sandpack
-      theme="dark"
+      theme={colorScheme}
       files={{
         "/App.js": {
           code: isLoading ? loadingCode : code || defaultCode,
           active: true,
         },
         "/index.js": {
-          code: indexFile,
+          code: getIndexFile(colorScheme),
           hidden: true,
         },
         "/index.html": {
           code: indexHtml,
           hidden: true,
         },
+        ...files,
       }}
       customSetup={{
         dependencies: {
