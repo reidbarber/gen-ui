@@ -12,6 +12,7 @@ import {
 } from "@codesandbox/sandpack-react";
 import { getLanguageOfFile } from "../utils/utils";
 import Editor from "@monaco-editor/react";
+import { PromptBar } from "../components/PromptBar";
 
 function MonacoEditor() {
   const { code, updateCode } = useActiveCode();
@@ -50,6 +51,7 @@ export default function Home(): JSX.Element {
             <SandpackPreview style={{ height: "100vh" }} />
           </SandpackLayout>
         </SandpackProvider>
+        <PromptBar />
       </Provider>
     </SSRProvider>
   );
