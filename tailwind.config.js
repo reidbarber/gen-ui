@@ -11,5 +11,6 @@ module.exports = {
   theme: {
     extend: {},
   },
-  plugins: [],
+  presets: [require("./spectrum-preset.js")],
+  plugins: [require("tailwindcss-react-aria-components")],
 };
