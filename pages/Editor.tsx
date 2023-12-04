@@ -1,4 +1,10 @@
-import { FileTabs, Sandpack, SandpackStack, useActiveCode, useSandpack } from "@codesandbox/sandpack-react";
+import {
+  FileTabs,
+  Sandpack,
+  SandpackStack,
+  useActiveCode,
+  useSandpack,
+} from "@codesandbox/sandpack-react";
 import React from "react";
 import MonacoEditor from "@monaco-editor/react";
 import { getLanguageOfFile } from "../utils/utils";
