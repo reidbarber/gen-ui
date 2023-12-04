@@ -1,4 +1,4 @@
-import { Sandpack} from "@codesandbox/sandpack-react";
+import { Sandpack } from "@codesandbox/sandpack-react";
 import React from "react";
 
 const indexFile = `import React from "react";

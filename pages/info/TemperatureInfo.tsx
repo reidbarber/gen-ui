@@ -21,12 +21,12 @@ export function TemperatureInfo(): JSX.Element {
       </Content>
       <Footer>
         <Link>
-            <a
-              href="https://beta.openai.com/docs/api-reference/completions/create#completions/create-temperature"
-              target="_blank"
-            >
-              Learn more about temperature
-            </a>
+          <a
+            href="https://beta.openai.com/docs/api-reference/completions/create#completions/create-temperature"
+            target="_blank"
+          >
+            Learn more about temperature
+          </a>
         </Link>
       </Footer>
     </ContextualHelp>

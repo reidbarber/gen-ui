@@ -14,17 +14,19 @@ export function ModelInfo(): JSX.Element {
       <Heading>About models</Heading>
       <Content>
         <Text>
-          GPT-3 models can understand and generate natural language. Codex models are descendants of GPT-3 that have been trained on both natural language and billions of lines of code.
+          GPT-3 models can understand and generate natural language. Codex
+          models are descendants of GPT-3 that have been trained on both natural
+          language and billions of lines of code.
         </Text>
       </Content>
       <Footer>
         <Link>
-            <a
-              href="https://beta.openai.com/docs/models/overview"
-              target="_blank"
-            >
-              Learn more about models
-            </a>
+          <a
+            href="https://beta.openai.com/docs/models/overview"
+            target="_blank"
+          >
+            Learn more about models
+          </a>
         </Link>
       </Footer>
     </ContextualHelp>

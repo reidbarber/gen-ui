@@ -30,7 +30,7 @@ import { Editor } from "./Editor";
 import { TemperatureInfo } from "./info/TemperatureInfo";
 import { ModelInfo } from "./info/ModelInfo";
 import { MaxTokensInfo } from "./info/MaxTokensInfo";
-import examples from './examples.json';
+import examples from "./examples.json";
 import Head from "next/head";
 
 const DEFAULT_PROMPT = `/*
@@ -44,14 +44,25 @@ const DEFAULT_PROMPT = `/*
   Your prompt is: {{prompt}}.
 */`;
 
-const STOP_SEQUENCE = 'export default App;';
+const STOP_SEQUENCE = "export default App;";
 
 let getFullPrompt = (prompt: string, userInput: string) => {
-  let components = Object.keys(examples).filter(componentName => userInput.includes(componentName));
-  let examplesString = components.map((component) => examples[component].map((example) => `description: ${example.description}\n    code: ${example.code}\n\n`).join('\n')).join('\n');
+  let components = Object.keys(examples).filter((componentName) =>
+    userInput.includes(componentName)
+  );
+  let examplesString = components
+    .map((component) =>
+      examples[component]
+        .map(
+          (example) =>
+            `description: ${example.description}\n    code: ${example.code}\n\n`
+        )
+        .join("\n")
+    )
+    .join("\n");
   return prompt
-    .replace('{{prompt}}', userInput)
-    .replace('{{examples}}', examplesString);
+    .replace("{{prompt}}", userInput)
+    .replace("{{examples}}", examplesString);
 };
 
 export default function Home(): JSX.Element {
@@ -59,12 +70,12 @@ export default function Home(): JSX.Element {
   let [isLoading, setIsLoading] = useState(false);
   let [code, setCode] = useState(null);
   let [alert, setAlert] = useState<null | string>(null);
-  let [prompt, setPrompt] = useState(DEFAULT_PROMPT); 
+  let [prompt, setPrompt] = useState(DEFAULT_PROMPT);
 
   let [selectedModel, setSelectedModel] = useState<Key>("code-davinci-002");
   let [temperature, setTemperature] = useState(0);
   let [maxTokens, setMaxTokens] = useState(2048);
-  let [models, setModels] = useState([])
+  let [models, setModels] = useState([]);
 
   useEffect(() => {
     fetchModels();
@@ -76,7 +87,7 @@ export default function Home(): JSX.Element {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-        }
+        },
       });
       let json = await res.json();
       if (json.error) {
@@ -105,7 +116,7 @@ export default function Home(): JSX.Element {
           prompt: getFullPrompt(prompt, userInput),
           temperature,
           max_tokens: maxTokens,
-          stop: STOP_SEQUENCE
+          stop: STOP_SEQUENCE,
         }),
       });
       let json = await res.json();
@@ -122,12 +133,12 @@ export default function Home(): JSX.Element {
   };
 
   let handleGenerate = () => {
-    if (userInput.trim() === '') {
-      setAlert('Please provide a prompt');
+    if (userInput.trim() === "") {
+      setAlert("Please provide a prompt");
     } else {
       fetchCompletion();
     }
-  }
+  };
 
   return (
     <SSRProvider>
@@ -147,7 +158,12 @@ export default function Home(): JSX.Element {
                 <Content>
                   <Flex direction="column">
                     <Flex marginTop="size-100" marginBottom="size-100">
-                      <TextArea label="Prompt" value={prompt} onChange={setPrompt} width="100%" />
+                      <TextArea
+                        label="Prompt"
+                        value={prompt}
+                        onChange={setPrompt}
+                        width="100%"
+                      />
                     </Flex>
                     <Flex marginTop="size-100" marginBottom="size-100">
                       <Picker
@@ -155,9 +171,13 @@ export default function Home(): JSX.Element {
                         items={models}
                         selectedKey={selectedModel}
                         onSelectionChange={setSelectedModel}
-                        contextualHelp={ <ModelInfo />}
+                        contextualHelp={<ModelInfo />}
                       >
-                        {item => <Item key={item.id} textValue={item.id}>{item.id}</Item>}
+                        {(item) => (
+                          <Item key={item.id} textValue={item.id}>
+                            {item.id}
+                          </Item>
+                        )}
                       </Picker>
                     </Flex>
                     <Flex marginTop="size-100" marginBottom="size-100">
@@ -242,19 +262,25 @@ export default function Home(): JSX.Element {
               </Button>
             </form>
           </View>
-          <View maxWidth="100%" gridArea="code" padding="size-500" margin="auto">
+          <View
+            maxWidth="100%"
+            gridArea="code"
+            padding="size-500"
+            margin="auto"
+          >
             <Editor code={code} isLoading={isLoading} />
           </View>
         </Grid>
         <DialogContainer onDismiss={() => setAlert(null)}>
-          {alert &&
+          {alert && (
             <AlertDialog
               title="Error"
               variant="warning"
-              primaryActionLabel="OK">
+              primaryActionLabel="OK"
+            >
               {alert}
             </AlertDialog>
-          }
+          )}
         </DialogContainer>
       </Provider>
     </SSRProvider>
