@@ -7,7 +7,7 @@ import {
   SandpackLayout,
 } from "@codesandbox/sandpack-react";
 import { PromptBar } from "../components/PromptBar";
-import { Editor } from "./Editor";
+import { Editor } from "../components/Editor";
 import { defaultCustomSetup, defaultFiles } from "../data/sandpack";
 
 export default function Home(): JSX.Element {
