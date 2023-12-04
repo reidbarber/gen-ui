@@ -12,6 +12,9 @@ import { defaultCustomSetup, defaultFiles } from "../data/sandpack";
 
 export default function Home(): JSX.Element {
   let [files, setFiles] = React.useState(defaultFiles);
+  let onSubmitPrompt = (value: string) => {
+    console.log(value);
+  };
   return (
     <Provider theme={defaultTheme} locale="en-US">
       <Head>
@@ -28,7 +31,7 @@ export default function Home(): JSX.Element {
           <SandpackPreview style={{ height: "100vh" }} />
         </SandpackLayout>
       </SandpackProvider>
-      <PromptBar />
+      <PromptBar onSubmit={onSubmitPrompt} />
     </Provider>
   );
 }
