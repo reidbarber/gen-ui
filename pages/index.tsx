@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { defaultTheme, Provider } from "@adobe/react-spectrum";
 import Head from "next/head";
 import {
@@ -15,6 +15,7 @@ export default function Home(): JSX.Element {
   let onSubmitPrompt = (value: string) => {
     console.log(value);
   };
+
   return (
     <Provider theme={defaultTheme} locale="en-US">
       <Head>
