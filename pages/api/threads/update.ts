@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import OpenAI from "openai";
+import { Thread, ThreadUpdateParams } from "../../../data/types";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -7,11 +8,11 @@ const openai = new OpenAI({
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<OpenAI.Beta.Thread | { error: string }>
+  res: NextApiResponse<Thread | { error: string }>
 ) {
   try {
     const { threadId } = req.query;
-    const body: OpenAI.Beta.ThreadUpdateParams = req.body;
+    const body: ThreadUpdateParams = req.body;
     const response = await openai.beta.threads.update(threadId as string, body);
     res.status(200).json(response);
   } catch (error) {

@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import OpenAI from "openai";
+import { ThreadDeleted } from "../../../data/types";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -7,7 +8,7 @@ const openai = new OpenAI({
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<OpenAI.Beta.Threads.ThreadDeleted | { error: string }>
+  res: NextApiResponse<ThreadDeleted | { error: string }>
 ) {
   try {
     const { threadId } = req.query;

@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import OpenAI from "openai";
+import { Run, ThreadCreateAndRunParams } from "../../../data/types";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -7,10 +8,10 @@ const openai = new OpenAI({
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<OpenAI.Beta.Threads.Run | { error: string }>
+  res: NextApiResponse<Run | { error: string }>
 ) {
   try {
-    const body: OpenAI.Beta.ThreadCreateAndRunParams = req.body;
+    const body: ThreadCreateAndRunParams = req.body;
     const response = await openai.beta.threads.createAndRun(body);
     res.status(200).json(response);
   } catch (error) {
