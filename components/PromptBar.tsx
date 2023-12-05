@@ -96,8 +96,8 @@ export function PromptBar({ onSubmit }) {
             )}
 
             <div className="flex gap-150">
-              {files.map((file) => (
-                <div key={file.key} className="relative">
+              {files.map((file, index) => (
+                <div key={`${file.name}-${index}`} className="relative">
                   <Button
                     aria-label={`Remove image ${file.name}`}
                     onPress={() =>
@@ -116,9 +116,9 @@ export function PromptBar({ onSubmit }) {
                     >
                       <path
                         stroke="currentColor"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
                         d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
                       />
                     </svg>
