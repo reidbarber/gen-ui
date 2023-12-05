@@ -1,12 +1,14 @@
 import { ActionButton } from "@adobe/react-spectrum";
 import Image from "@spectrum-icons/workflow/Image";
-import { useRef, useState } from "react";
+import ImageAdd from "@spectrum-icons/workflow/ImageAdd";
+import { useState } from "react";
 import {
   Group,
   TextField,
   Button,
   Label,
   TextArea,
+  FileTrigger,
 } from "react-aria-components";
 
 export function PromptBar({ onSubmit }) {
@@ -16,7 +18,7 @@ export function PromptBar({ onSubmit }) {
     onSubmit(value);
   };
   let [isTextAreaFocused, setIsTextAreaFocused] = useState(false);
-  let fileInputRef = useRef<HTMLInputElement>(null);
+  let [files, setFiles] = useState([]);
   return (
     <form
       onSubmit={onFormSubmit}
@@ -48,19 +50,75 @@ export function PromptBar({ onSubmit }) {
           />
         </TextField>
         <div className="flex justify-between">
-          <ActionButton
-            onPress={() => fileInputRef.current.click()}
-            aria-label="Upload image"
-            isQuiet
-          >
-            <Image />
-          </ActionButton>
-          <input
-            ref={fileInputRef}
-            type="file"
-            className="hidden"
-            accept="image/*"
-          />
+          <div className="flex items-end gap-300">
+            {files.length === 0 && (
+              <FileTrigger
+                acceptedFileTypes={["image/*"]}
+                onSelect={(e) => {
+                  let files = Array.from(e);
+                  setFiles((prevFiles) => [...prevFiles, ...files]);
+                }}
+              >
+                <ActionButton aria-label="Upload image" isQuiet>
+                  <Image />
+                </ActionButton>
+              </FileTrigger>
+            )}
+
+            <div className="flex gap-150">
+              {files.map((file) => (
+                <div className="relative">
+                  <Button
+                    aria-label={`Remove image ${file.name}`}
+                    onPress={() =>
+                      setFiles((prevFiles) =>
+                        prevFiles.filter((prevFile) => prevFile !== file)
+                      )
+                    }
+                    className="absolute top-0 right-0 bg-gray-400 rounded-full outline-none -mt-75 -mr-75 h-200 w-200 focus-visible:ring"
+                  >
+                    <svg
+                      className="m-auto text-gray-800 w-75 h-75 dark:text-white"
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 14 14"
+                    >
+                      <path
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                      />
+                    </svg>
+                  </Button>
+                  <img
+                    alt="Image preview"
+                    key={file.name}
+                    className="object-cover border border-gray-300 rounded h-800 w-800"
+                    src={URL.createObjectURL(file)}
+                  />
+                </div>
+              ))}
+              {files.length > 0 && (
+                <FileTrigger
+                  acceptedFileTypes={["image/*"]}
+                  onSelect={(e) => {
+                    let files = Array.from(e);
+                    setFiles((prevFiles) => [...prevFiles, ...files]);
+                  }}
+                >
+                  <Button
+                    className="border border-gray-300 rounded h-800 w-800"
+                    aria-label="Add image"
+                  >
+                    <ImageAdd />
+                  </Button>
+                </FileTrigger>
+              )}
+            </div>
+          </div>
 
           <Button
             type="submit"
