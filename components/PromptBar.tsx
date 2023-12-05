@@ -56,8 +56,8 @@ export function PromptBar({ onSubmit }) {
     >
       <Group
         className={`${isTextAreaFocused ? "text-area-focused" : ""} ${
-          isDropTarget ? "ring" : ""
-        } [.text-area-focused&:has([data-focus-visible])]:ring py-200 px-300 flex flex-col mx-auto my-300 align-middle bg-white dark:bg-black border rounded-[var(--spectrum-global-dimension-size-300)] shadow-md w-[85%]`}
+          isDropTarget ? "outline" : ""
+        } [.text-area-focused&:has([data-focus-visible])]:outline py-200 px-300 flex flex-col mx-auto my-300 align-middle bg-white dark:bg-black border rounded-[var(--spectrum-global-dimension-size-300)] shadow-md w-[85%]`}
       >
         <TextField
           onFocus={(e) => setIsTextAreaFocused(true)}
@@ -105,7 +105,7 @@ export function PromptBar({ onSubmit }) {
                         prevFiles.filter((prevFile) => prevFile !== file)
                       )
                     }
-                    className="absolute top-0 right-0 bg-gray-400 rounded-full outline-none -mt-75 -mr-75 h-200 w-200 focus-visible:ring"
+                    className="absolute top-0 right-0 bg-gray-400 rounded-full outline-none -mt-75 -mr-75 h-200 w-200 focus-visible:outline"
                   >
                     <svg
                       className="m-auto text-gray-800 w-75 h-75 dark:text-white"
@@ -152,7 +152,7 @@ export function PromptBar({ onSubmit }) {
           <Button
             type="submit"
             isDisabled={value === ""}
-            className="my-auto font-semibold text-white rounded-full disabled:bg-gray-300 disabled:text-gray-500 bg-accent-800 px-150 py-75 focus-visible:ring focus:outline-none"
+            className="my-auto font-semibold text-white rounded-full disabled:bg-gray-300 disabled:text-gray-500 bg-accent-800 px-150 py-75 focus-visible:outline focus:outline-none"
           >
             Generate
           </Button>

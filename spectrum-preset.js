@@ -15,6 +15,18 @@ module.exports = {
       ringOffsetColor: {
         DEFAULT: "var(--spectrum-alias-background-color-default)",
       },
+      outlineColor: {
+        DEFAULT: "var(--spectrum-alias-focus-ring-color)",
+      },
+      outlineOffset: {
+        DEFAULT: "var(--spectrum-alias-focus-ring-gap)",
+      },
+      outlineWidth: {
+        DEFAULT: "var(--spectrum-alias-focus-ring-size)",
+        /** For use when next to existing blue border. */
+        half: "calc(var(--spectrum-alias-focus-ring-size) / 2)",
+        double: "calc(var(--spectrum-alias-focus-ring-size) * 2)",
+      },
     },
     screens: {
       xs: "304px",
