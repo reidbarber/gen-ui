@@ -1,6 +1,6 @@
 import { ActionButton } from "@adobe/react-spectrum";
 import Image from "@spectrum-icons/workflow/Image";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
   Group,
   TextField,
@@ -16,6 +16,7 @@ export function PromptBar({ onSubmit }) {
     onSubmit(value);
   };
   let [isTextAreaFocused, setIsTextAreaFocused] = useState(false);
+  let fileInputRef = useRef<HTMLInputElement>(null);
   return (
     <form
       onSubmit={onFormSubmit}
@@ -47,9 +48,19 @@ export function PromptBar({ onSubmit }) {
           />
         </TextField>
         <div className="flex justify-between">
-          <ActionButton aria-label="Upload image" isQuiet>
+          <ActionButton
+            onPress={() => fileInputRef.current.click()}
+            aria-label="Upload image"
+            isQuiet
+          >
             <Image />
           </ActionButton>
+          <input
+            ref={fileInputRef}
+            type="file"
+            className="hidden"
+            accept="image/*"
+          />
 
           <Button
             type="submit"
