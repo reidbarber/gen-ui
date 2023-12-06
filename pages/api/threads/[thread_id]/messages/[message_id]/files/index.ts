@@ -10,7 +10,7 @@ export default async function handler(
   res: NextApiResponse<MessageFilesPage | { error: string }>
 ) {
   try {
-    const { thread_id, message_id, query } = req.query;
+    const { thread_id, message_id, ...query } = req.query;
 
     if (req.method === "GET") {
       const response = await openai.beta.threads.messages.files.list(

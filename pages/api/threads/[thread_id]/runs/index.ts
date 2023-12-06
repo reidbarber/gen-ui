@@ -1,5 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { Run, RunCreateParams, RunsPage } from "../../../../../data/types";
+import {
+  Run,
+  RunCreateParams,
+  RunListParams,
+  RunsPage,
+} from "../../../../../data/types";
 import { openai } from "../../../../../lib/openai";
 
 export default async function handler(
@@ -8,8 +13,11 @@ export default async function handler(
 ) {
   try {
     if (req.method === "GET") {
-      const { thread_id } = req.query;
-      const response = await openai.beta.threads.runs.list(thread_id as string);
+      const { thread_id, ...query } = req.query;
+      const response = await openai.beta.threads.runs.list(
+        thread_id as string,
+        query as RunListParams
+      );
       res.status(200).json(response);
     }
     if (req.method === "POST") {

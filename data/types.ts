@@ -30,6 +30,9 @@ export interface Files extends OpenAI.Beta.Threads.Messages.Files {}
 
 export interface MessageFile extends OpenAI.Beta.Threads.Messages.MessageFile {}
 
+export interface MessageListParams
+  extends OpenAI.Beta.Threads.MessageListParams {}
+
 export interface FileListParams
   extends OpenAI.Beta.Threads.Messages.FileListParams {}
 

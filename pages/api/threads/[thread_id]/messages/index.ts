@@ -1,17 +1,21 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { MessageCreateParams, ThreadMessage } from "../../../../../data/types";
 import { openai } from "../../../../../lib/openai";
+import {
+  MessageListParams,
+  ThreadMessagesPage,
+} from "openai/resources/beta/threads/messages/messages";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<ThreadMessage | { error: string }>
+  res: NextApiResponse<ThreadMessage | ThreadMessagesPage | { error: string }>
 ) {
   try {
     if (req.method === "GET") {
-      const { thread_id, message_id } = req.query;
-      const response = await openai.beta.threads.messages.retrieve(
+      const { thread_id, ...query } = req.query;
+      const response = await openai.beta.threads.messages.list(
         thread_id as string,
-        message_id as string
+        query as MessageListParams
       );
       res.status(200).json(response);
     } else if (req.method === "POST") {
