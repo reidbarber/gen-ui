@@ -25,3 +25,25 @@ export interface ThreadMessage extends OpenAI.Beta.Threads.ThreadMessage {}
 
 export interface MessageCreateParams
   extends OpenAI.Beta.Threads.MessageCreateParams {}
+
+export interface Files extends OpenAI.Beta.Threads.Messages.Files {}
+
+export interface MessageFile extends OpenAI.Beta.Threads.Messages.MessageFile {}
+
+export interface FileListParams
+  extends OpenAI.Beta.Threads.Messages.FileListParams {}
+
+export interface MessageFilesPage
+  extends OpenAI.Beta.Threads.Messages.MessageFilesPage {}
+
+export interface RunStep extends OpenAI.Beta.Threads.Runs.RunStep {}
+
+export interface RunStepsPage extends OpenAI.Beta.Threads.Runs.RunStepsPage {}
+
+export interface Steps extends OpenAI.Beta.Threads.Runs.Steps {}
+
+export interface StepListParams
+  extends OpenAI.Beta.Threads.Runs.StepListParams {}
+
+export interface RunSubmitToolOutputsParams
+  extends OpenAI.Beta.Threads.Runs.RunSubmitToolOutputsParams {}
