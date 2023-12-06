@@ -10,6 +10,8 @@ import { createThreadAndRun, getRun } from "../api/runs";
 import { getThread } from "../api/threads";
 import { createMessage } from "../api/messages";
 import { Preview } from "../components/Preview";
+import ThemeSwitcher from "../components/ThemeSwitcher";
+import PreviewToolbar from "../components/PreviewToolbar";
 
 export default function Home(): JSX.Element {
   let [colorScheme, setColorScheme] = useState<"light" | "dark">("dark");
@@ -75,6 +77,9 @@ export default function Home(): JSX.Element {
         <SandpackLayout style={{ border: "none" }}>
           <Editor colorScheme={colorScheme} />
           <Preview setColorScheme={setColorScheme} />
+          <PreviewToolbar>
+            <ThemeSwitcher setColorScheme={setColorScheme} />
+          </PreviewToolbar>
         </SandpackLayout>
       </SandpackProvider>
       <PromptBar onSubmit={onSubmitPrompt} />

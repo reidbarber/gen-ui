@@ -30,11 +30,5 @@ export function Preview({ setColorScheme }) {
   //   }
   // }, [colorScheme]);
 
-  return (
-    <SandpackPreview style={{ height: "100vh" }}>
-      <div className="absolute top-0 w-full bg-[var(--sp-colors-surface1)] border-b-thin border-[var(--sp-colors-surface2)] h-500 py-50 px-200">
-        <ThemeSwitcher setColorScheme={setColorScheme} />
-      </div>
-    </SandpackPreview>
-  );
+  return <SandpackPreview style={{ height: "100vh" }} />;
 }

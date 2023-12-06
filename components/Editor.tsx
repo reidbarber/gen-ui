@@ -22,7 +22,7 @@ export function Editor({ colorScheme }) {
 
   return (
     <SandpackStack style={{ height: "100vh", margin: 0 }}>
-      <FileTabs />
+      <FileTabs style={{ border: "none" }} />
       <div className="flex-1 bg-gray-50">
         <MonacoEditor
           width="100%"
