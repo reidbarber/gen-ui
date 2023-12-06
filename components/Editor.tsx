@@ -9,7 +9,7 @@ import React from "react";
 import MonacoEditor from "@monaco-editor/react";
 import { getLanguageOfFile } from "../utils/utils";
 
-export function Editor() {
+export function Editor({ colorScheme }) {
   const { code, updateCode } = useActiveCode();
   const { sandpack } = useSandpack();
 
@@ -29,7 +29,7 @@ export function Editor() {
           width="100%"
           height="100%"
           language={language}
-          theme="vs-dark"
+          theme={colorScheme === "dark" ? "vs-dark" : "light"}
           key={sandpack.activeFile}
           defaultValue={code}
           onChange={(value) => updateCode(value || "")}

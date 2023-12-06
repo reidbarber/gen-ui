@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { defaultTheme, Provider } from "@adobe/react-spectrum";
+import { defaultTheme, Item, Picker, Provider } from "@adobe/react-spectrum";
 import Head from "next/head";
 import {
   SandpackProvider,
@@ -13,8 +13,11 @@ import { Run, Thread } from "../data/types";
 import { createThreadAndRun, getRun } from "../api/runs";
 import { getThread } from "../api/threads";
 import { createMessage } from "../api/messages";
+import ThemeSwitcher from "../components/ThemeSwitcher";
+import { Preview } from "../components/Preview";
 
 export default function Home(): JSX.Element {
+  let [colorScheme, setColorScheme] = React.useState<"light" | "dark">("dark");
   let [files, setFiles] = React.useState(defaultFiles);
   let [hasSentInitialPrompt, setHasSentInitialPrompt] = React.useState(false);
   let [isGenerating, setIsGenerating] = React.useState(false);
@@ -64,19 +67,19 @@ export default function Home(): JSX.Element {
   };
 
   return (
-    <Provider colorScheme="dark" theme={defaultTheme} locale="en-US">
+    <Provider colorScheme={colorScheme} theme={defaultTheme} locale="en-US">
       <Head>
         <title>GenUI</title>
       </Head>
       <SandpackProvider
         files={files}
         customSetup={defaultCustomSetup}
-        theme="dark"
+        theme={colorScheme}
         template="react"
       >
         <SandpackLayout>
-          <Editor />
-          <SandpackPreview style={{ height: "100vh" }} />
+          <Editor colorScheme={colorScheme} />
+          <Preview colorScheme={colorScheme} setColorScheme={setColorScheme} />
         </SandpackLayout>
       </SandpackProvider>
       <PromptBar onSubmit={onSubmitPrompt} />
