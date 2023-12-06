@@ -12,3 +12,5 @@ export interface ThreadDeleted extends OpenAI.Beta.Threads.ThreadDeleted {}
 
 export interface ThreadCreateAndRunParams
   extends OpenAI.Beta.ThreadCreateAndRunParams {}
+
+export interface ThreadMessage extends OpenAI.Beta.Threads.ThreadMessage {}
