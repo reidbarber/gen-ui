@@ -72,7 +72,7 @@ export default function Home(): JSX.Element {
         theme={colorScheme}
         template="react"
       >
-        <SandpackLayout>
+        <SandpackLayout style={{ border: "none" }}>
           <Editor colorScheme={colorScheme} />
           <Preview setColorScheme={setColorScheme} />
         </SandpackLayout>
