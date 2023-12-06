@@ -64,7 +64,7 @@ export default function Home(): JSX.Element {
   return (
     <Provider colorScheme={colorScheme} theme={defaultTheme} locale="en-US">
       <Head>
-        <title>GenUI</title>
+        <title>GenUI Studio</title>
       </Head>
       <SandpackProvider
         files={files}
