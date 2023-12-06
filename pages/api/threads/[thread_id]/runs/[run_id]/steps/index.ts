@@ -8,11 +8,11 @@ export default async function handler(
 ) {
   try {
     if (req.method === "GET") {
-      const { thread_id, run_id } = req.query;
+      const { thread_id, run_id, ...query } = req.query;
       const response = await openai.beta.threads.runs.steps.list(
         thread_id as string,
         run_id as string,
-        req.query as StepListParams
+        query as StepListParams
       );
       res.status(200).json(response);
     } else {
