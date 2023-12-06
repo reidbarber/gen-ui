@@ -6,7 +6,7 @@ export interface RunUpdateParams extends OpenAI.Beta.Threads.RunUpdateParams {}
 
 export interface RunListParams extends OpenAI.Beta.Threads.RunListParams {}
 
-export interface RunListParams extends OpenAI.Beta.Threads.RunListParams {}
+export interface RunCreateParams extends OpenAI.Beta.Threads.RunCreateParams {}
 
 export interface RunsPage extends OpenAI.Beta.Threads.RunsPage {}
 
@@ -22,3 +22,6 @@ export interface ThreadCreateAndRunParams
   extends OpenAI.Beta.ThreadCreateAndRunParams {}
 
 export interface ThreadMessage extends OpenAI.Beta.Threads.ThreadMessage {}
+
+export interface MessageCreateParams
+  extends OpenAI.Beta.Threads.MessageCreateParams {}

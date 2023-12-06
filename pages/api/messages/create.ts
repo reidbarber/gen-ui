@@ -1,6 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { ThreadMessage } from "../../../data/types";
-import { MessageCreateParams } from "openai/resources/beta/threads/messages/messages";
+import { MessageCreateParams, ThreadMessage } from "../../../data/types";
 import { openai } from "../../../lib/openai";
 
 export default async function handler(

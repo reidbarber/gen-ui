@@ -1,7 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { Run } from "../../../data/types";
+import { Run, RunCreateParams } from "../../../data/types";
 import { openai } from "../../../lib/openai";
-import { RunCreateParams } from "openai/resources/beta/threads/runs/runs";
 
 export default async function handler(
   req: NextApiRequest,
