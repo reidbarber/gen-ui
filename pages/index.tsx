@@ -1,11 +1,7 @@
-import React, { useEffect, useRef } from "react";
-import { defaultTheme, Item, Picker, Provider } from "@adobe/react-spectrum";
+import React, { useEffect } from "react";
+import { defaultTheme, Provider } from "@adobe/react-spectrum";
 import Head from "next/head";
-import {
-  SandpackProvider,
-  SandpackPreview,
-  SandpackLayout,
-} from "@codesandbox/sandpack-react";
+import { SandpackProvider, SandpackLayout } from "@codesandbox/sandpack-react";
 import { PromptBar } from "../components/PromptBar";
 import { Editor } from "../components/Editor";
 import { defaultCustomSetup, defaultFiles } from "../data/sandpack";
@@ -13,7 +9,6 @@ import { Run, Thread } from "../data/types";
 import { createThreadAndRun, getRun } from "../api/runs";
 import { getThread } from "../api/threads";
 import { createMessage } from "../api/messages";
-import ThemeSwitcher from "../components/ThemeSwitcher";
 import { Preview } from "../components/Preview";
 
 export default function Home(): JSX.Element {

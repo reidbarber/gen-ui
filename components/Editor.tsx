@@ -1,6 +1,5 @@
 import {
   FileTabs,
-  Sandpack,
   SandpackStack,
   useActiveCode,
   useSandpack,
