@@ -74,7 +74,7 @@ export default function Home(): JSX.Element {
       >
         <SandpackLayout>
           <Editor colorScheme={colorScheme} />
-          <Preview colorScheme={colorScheme} setColorScheme={setColorScheme} />
+          <Preview setColorScheme={setColorScheme} />
         </SandpackLayout>
       </SandpackProvider>
       <PromptBar onSubmit={onSubmitPrompt} />
