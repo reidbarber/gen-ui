@@ -57,7 +57,7 @@ export function PromptBar({ onSubmit }) {
       <Group
         className={`${isTextAreaFocused ? "text-area-focused" : ""} ${
           isDropTarget ? "outline" : ""
-        } [.text-area-focused&:has([data-focus-visible])]:outline border-none py-200 px-300 flex flex-col mx-auto my-300 align-middle text-black dark:text-white bg-gray-50 border rounded-[var(--spectrum-global-dimension-size-300)] shadow-md w-[85%]`}
+        } [.text-area-focused&:has([data-focus-visible])]:outline border-none py-200 px-300 flex flex-col mx-auto my-300 align-middle bg-gray-50 border rounded-[var(--spectrum-global-dimension-size-300)] shadow-md w-[85%]`}
       >
         <TextField
           onFocus={(e) => setIsTextAreaFocused(true)}
