@@ -1,11 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import OpenAI from "openai";
 import { ThreadMessage } from "../../../data/types";
 import { MessageCreateParams } from "openai/resources/beta/threads/messages/messages";
-
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+import { openai } from "../../../lib/openai";
 
 export default async function handler(
   req: NextApiRequest,
