@@ -5,7 +5,7 @@ import {
 } from "@adobe/react-spectrum";
 import Image from "@spectrum-icons/workflow/Image";
 import ImageAdd from "@spectrum-icons/workflow/ImageAdd";
-import { useRef, useState } from "react";
+import { FormEvent, useRef, useState } from "react";
 import {
   Group,
   TextField,
@@ -18,7 +18,7 @@ import { useDrop } from "react-aria";
 
 export function PromptBar({ onSubmit }) {
   let [value, setValue] = useState("");
-  let onFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  let onFormSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     onSubmit(value);
   };

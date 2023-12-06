@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { defaultTheme, Provider } from "@adobe/react-spectrum";
 import Head from "next/head";
 import { SandpackProvider, SandpackLayout } from "@codesandbox/sandpack-react";
@@ -12,14 +12,14 @@ import { createMessage } from "../api/messages";
 import { Preview } from "../components/Preview";
 
 export default function Home(): JSX.Element {
-  let [colorScheme, setColorScheme] = React.useState<"light" | "dark">("dark");
-  let [files, setFiles] = React.useState(defaultFiles);
-  let [hasSentInitialPrompt, setHasSentInitialPrompt] = React.useState(false);
-  let [isGenerating, setIsGenerating] = React.useState(false);
+  let [colorScheme, setColorScheme] = useState<"light" | "dark">("dark");
+  let [files, setFiles] = useState(defaultFiles);
+  let [hasSentInitialPrompt, setHasSentInitialPrompt] = useState(false);
+  let [isGenerating, setIsGenerating] = useState(false);
 
-  let [threadId, setThreadId] = React.useState<string | null>(null);
-  let [thread, setThread] = React.useState<Thread | null>(null);
-  let [awaitingRun, setAwaitingRun] = React.useState<Run | null>(null);
+  let [threadId, setThreadId] = useState<string | null>(null);
+  let [thread, setThread] = useState<Thread | null>(null);
+  let [awaitingRun, setAwaitingRun] = useState<Run | null>(null);
 
   // Check run status every 3 seconds
   useEffect(() => {
