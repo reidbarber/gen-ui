@@ -57,7 +57,7 @@ export function PromptBar({ onSubmit }) {
       <Group
         className={`${isTextAreaFocused ? "text-area-focused" : ""} ${
           isDropTarget ? "outline" : ""
-        } [.text-area-focused&:has([data-focus-visible])]:outline py-200 px-300 flex flex-col mx-auto my-300 align-middle bg-white dark:bg-black border rounded-[var(--spectrum-global-dimension-size-300)] shadow-md w-[85%]`}
+        } [.text-area-focused&:has([data-focus-visible])]:outline border-none py-200 px-300 flex flex-col mx-auto my-300 align-middle text-black dark:text-white bg-gray-50 border rounded-[var(--spectrum-global-dimension-size-300)] shadow-md w-[85%]`}
       >
         <TextField
           onFocus={(e) => setIsTextAreaFocused(true)}
@@ -76,7 +76,7 @@ export function PromptBar({ onSubmit }) {
           <Label className="text-gray-600">Prompt</Label>
           <TextArea
             placeholder="Describe the app or component you want to generate"
-            className="w-full text-black resize-none dark:bg-black dark:text-white p-50 focus:outline-none"
+            className="w-full bg-transparent resize-none p-50 focus:outline-none"
           />
         </TextField>
         <div className="flex justify-between">

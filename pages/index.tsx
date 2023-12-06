@@ -64,7 +64,7 @@ export default function Home(): JSX.Element {
   };
 
   return (
-    <Provider theme={defaultTheme} locale="en-US">
+    <Provider colorScheme="dark" theme={defaultTheme} locale="en-US">
       <Head>
         <title>GenUI</title>
       </Head>
