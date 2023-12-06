@@ -1,4 +1,4 @@
-import { Thread } from "../data/types";
+import { Thread, ThreadUpdateParams } from "../data/types";
 
 const headers = {
   "Content-Type": "application/json",
@@ -20,7 +20,7 @@ export async function getThread(thread_id: string): Promise<Thread> {
 
 export async function updateThread(
   thread_id: string,
-  body: any
+  body: ThreadUpdateParams
 ): Promise<Thread> {
   return fetch(`api/threads/${thread_id}`, {
     method: "POST",

@@ -1,4 +1,4 @@
-import { MessageFile, MessageFilesPage } from "../data/types";
+import { FileListParams, MessageFile, MessageFilesPage } from "../data/types";
 
 const headers = {
   "Content-Type": "application/json",
@@ -21,7 +21,7 @@ export async function getFile(
 export async function listFiles(
   thread_id: string,
   message_id: string,
-  query?: any
+  query?: FileListParams
 ): Promise<MessageFilesPage> {
   return fetch(
     `api/threads/${thread_id}/messages/${message_id}/files?${query}`,

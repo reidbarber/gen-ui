@@ -16,6 +16,9 @@ export interface ThreadUpdateParams extends OpenAI.Beta.ThreadUpdateParams {}
 
 export interface ThreadCreateParams extends OpenAI.Beta.ThreadCreateParams {}
 
+export interface ThreadMessagesPage
+  extends OpenAI.Beta.Threads.Messages.ThreadMessagesPage {}
+
 export interface ThreadDeleted extends OpenAI.Beta.Threads.ThreadDeleted {}
 
 export interface ThreadCreateAndRunParams
