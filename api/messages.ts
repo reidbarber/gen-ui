@@ -8,10 +8,14 @@ const headers = {
   "Content-Type": "application/json",
 };
 
-export async function createMessage(thread_id: string): Promise<ThreadMessage> {
+export async function createMessage(
+  thread_id: string,
+  body: MessageCreateParams
+): Promise<ThreadMessage> {
   return fetch(`api/threads/${thread_id}/messages`, {
     method: "POST",
     headers,
+    body: JSON.stringify(body),
   }).then((res) => res.json());
 }
 

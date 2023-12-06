@@ -9,11 +9,14 @@ import {
 import { PromptBar } from "../components/PromptBar";
 import { Editor } from "../components/Editor";
 import { defaultCustomSetup, defaultFiles } from "../data/sandpack";
-import { Run, Thread, ThreadMessage } from "../data/types";
+import { Run, Thread } from "../data/types";
+import { createThreadAndRun, getRun } from "../api/runs";
+import { getThread } from "../api/threads";
+import { createMessage } from "../api/messages";
 
 export default function Home(): JSX.Element {
   let [files, setFiles] = React.useState(defaultFiles);
-  let [hasSentPrompt, setHasSentPrompt] = React.useState(false);
+  let [hasSentInitialPrompt, setHasSentInitialPrompt] = React.useState(false);
   let [isGenerating, setIsGenerating] = React.useState(false);
 
   let [threadId, setThreadId] = React.useState<string | null>(null);
@@ -24,28 +27,11 @@ export default function Home(): JSX.Element {
   useEffect(() => {
     if (awaitingRun && awaitingRun.expires_at > Date.now() / 1000) {
       let interval = setInterval(async () => {
-        let run = await fetch("/api/runs", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            runId: awaitingRun.id,
-            threadId: threadId,
-          }),
-        }).then((res) => res.json());
+        let run = await getRun(threadId, awaitingRun.id);
         if (run.status === "completed") {
           setAwaitingRun(null);
           setIsGenerating(false);
-          let thread = await fetch("/api/threads", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              threadId: threadId,
-            }),
-          }).then((res) => res.json());
+          let thread = await getThread(threadId);
           setThread(thread);
         }
       }, 3000);
@@ -54,52 +40,25 @@ export default function Home(): JSX.Element {
   }, [awaitingRun]);
 
   let onSubmitPrompt = async (value: string) => {
-    if (hasSentPrompt) {
+    if (hasSentInitialPrompt) {
       // Send message to thread
-      let message: ThreadMessage = await fetch("/api/messages", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          threadId: threadId,
-          content: value,
-        }),
-      }).then((res) => res.json());
+      let message = await createMessage(threadId, {
+        role: "user",
+        content: value,
+      });
       setIsGenerating(true);
     } else {
-      setHasSentPrompt(true);
+      setHasSentInitialPrompt(true);
       setIsGenerating(true);
 
       // Initialize thread
-      let initialRun: Run = await fetch("/api/createAndRun", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          messages: [
-            {
-              content: value,
-              role: "user",
-            },
-          ],
-        }),
-      }).then((res) => res.json());
+      let initialRun = await createThreadAndRun({ assistant_id: "" });
 
       // Set thread id
       setThreadId(initialRun.thread_id);
 
       // Get thread and update state
-      let thread = await fetch("/api/threads", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          threadId: initialRun.thread_id,
-        }),
-      }).then((res) => res.json());
+      let thread = await getThread(initialRun.thread_id);
       setThread(thread);
     }
   };
