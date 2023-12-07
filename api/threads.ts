@@ -1,13 +1,14 @@
-import { Thread, ThreadUpdateParams } from "../data/types";
+import { Thread, ThreadCreateParams, ThreadUpdateParams } from "../data/types";
 
 const headers = {
   "Content-Type": "application/json",
 };
 
-export async function createThread(): Promise<Thread> {
+export async function createThread(body: ThreadCreateParams): Promise<Thread> {
   return fetch("api/threads", {
     method: "POST",
     headers,
+    body: JSON.stringify(body),
   }).then((res) => res.json());
 }
 

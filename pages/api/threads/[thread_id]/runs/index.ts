@@ -21,7 +21,7 @@ export default async function handler(
       res.status(200).json(response);
     }
     if (req.method === "POST") {
-      const body: RunCreateParams = req.body;
+      const body: RunCreateParams = JSON.parse(req.body);
       const { thread_id } = req.query;
       const response = await openai.beta.threads.runs.create(
         thread_id as string,

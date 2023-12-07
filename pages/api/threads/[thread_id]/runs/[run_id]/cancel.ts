@@ -8,7 +8,7 @@ export default async function handler(
 ) {
   try {
     if (req.method === "POST") {
-      const body: RunSubmitToolOutputsParams = req.body;
+      const body: RunSubmitToolOutputsParams = JSON.parse(req.body);
       const { thread_id, run_id } = req.query;
       const response = await openai.beta.threads.runs.cancel(
         thread_id as string,

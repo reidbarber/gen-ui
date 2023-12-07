@@ -5,9 +5,21 @@ import { SandpackProvider, SandpackLayout } from "@codesandbox/sandpack-react";
 import { PromptBar } from "../components/PromptBar";
 import { Editor } from "../components/Editor";
 import { defaultCustomSetup, defaultFiles } from "../data/sandpack";
-import { Run, Thread } from "../data/types";
-import { createThreadAndRun, getRun } from "../api/runs";
-import { getThread } from "../api/threads";
+import {
+  Run,
+  RunSubmitToolOutputsParams,
+  Thread,
+  ThreadMessage,
+} from "../data/types";
+import {
+  createRun,
+  createThreadAndRun,
+  getRun,
+  getRunStep,
+  listRunSteps,
+  submitToolOutputs,
+} from "../api/runs";
+import { createThread, getThread } from "../api/threads";
 import { createMessage } from "../api/messages";
 import { Preview } from "../components/Preview";
 import ThemeSwitcher from "../components/ThemeSwitcher";
@@ -16,50 +28,117 @@ import PreviewToolbar from "../components/PreviewToolbar";
 export default function Home(): JSX.Element {
   let [colorScheme, setColorScheme] = useState<"light" | "dark">("dark");
   let [files, setFiles] = useState(defaultFiles);
-  let [hasSentInitialPrompt, setHasSentInitialPrompt] = useState(false);
   let [isGenerating, setIsGenerating] = useState(false);
-
-  let [threadId, setThreadId] = useState<string | null>(null);
+  let [assistantId, setAssistantId] = useState<string | null>(
+    "asst_qeVSVzTtaiwE4MTl3rUMxd7u"
+  );
   let [thread, setThread] = useState<Thread | null>(null);
-  let [awaitingRun, setAwaitingRun] = useState<Run | null>(null);
 
-  // Check run status every 3 seconds
-  useEffect(() => {
-    if (awaitingRun && awaitingRun.expires_at > Date.now() / 1000) {
-      let interval = setInterval(async () => {
-        let run = await getRun(threadId, awaitingRun.id);
-        if (run.status === "completed") {
-          setAwaitingRun(null);
-          setIsGenerating(false);
-          let thread = await getThread(threadId);
-          setThread(thread);
-        }
-      }, 3000);
-      return () => clearInterval(interval);
+  // Define functions that update files
+  let updateFile = (path: string, code: string) => {
+    setFiles((files) => {
+      return {
+        ...files,
+        [path]: {
+          ...files[path],
+          code,
+        },
+      };
+    });
+  };
+
+  let addFile = (path: string, code: string) => {
+    setFiles((files) => {
+      return {
+        ...files,
+        [path]: {
+          code,
+        },
+      };
+    });
+  };
+
+  // Inspired by https://github.com/vercel/ai/blob/main/examples/next-openai/app/api/assistant/route.ts
+  let waitForRun = async (run: Run) => {
+    // Poll for status change
+    while (run.status === "queued" || run.status === "in_progress") {
+      // delay for 500ms:
+      await new Promise((resolve) => setTimeout(resolve, 500));
+
+      run = await getRun(run.thread_id, run.id);
     }
-  }, [awaitingRun]);
+
+    // Check the run status
+    if (
+      run.status === "cancelled" ||
+      run.status === "cancelling" ||
+      run.status === "failed" ||
+      run.status === "expired"
+    ) {
+      throw new Error(run.status);
+    }
+
+    if (run.status === "requires_action") {
+      if (run.required_action?.type === "submit_tool_outputs") {
+        const tool_outputs =
+          run.required_action.submit_tool_outputs.tool_calls.map((toolCall) => {
+            const args = JSON.parse(toolCall.function.arguments);
+            if (toolCall.function.name === "updateFile") {
+              updateFile(args.path, args.code);
+            } else if (toolCall.function.name === "addFile") {
+              addFile(args.path, args.code);
+            } else {
+              throw new Error(
+                `Unknown tool call function: ${toolCall.function.name}`
+              );
+            }
+            return {
+              tool_call_id: toolCall.id,
+              output: JSON.stringify({
+                success: true,
+                errors: [],
+              }),
+            };
+          });
+
+        run = await submitToolOutputs(run.thread_id, run.id, {
+          tool_outputs,
+        });
+
+        await waitForRun(run);
+      }
+    }
+  };
 
   let onSubmitPrompt = async (value: string) => {
-    if (hasSentInitialPrompt) {
-      // Send message to thread
-      let message = await createMessage(threadId, {
+    if (thread) {
+      setIsGenerating(true);
+      // Send message to existing thread
+      let message = await createMessage(thread.id, {
         role: "user",
         content: value,
       });
-      setIsGenerating(true);
     } else {
-      setHasSentInitialPrompt(true);
       setIsGenerating(true);
 
-      // Initialize thread
-      let initialRun = await createThreadAndRun({ assistant_id: "" });
+      // Create a thread with a message
+      let newThread = await createThread({
+        messages: [
+          {
+            role: "user",
+            content: value,
+          },
+        ],
+      });
 
-      // Set thread id
-      setThreadId(initialRun.thread_id);
+      setThread(newThread);
 
-      // Get thread and update state
-      let thread = await getThread(initialRun.thread_id);
-      setThread(thread);
+      // Run the thread
+      let initialRun = await createRun(newThread.id, {
+        assistant_id: assistantId,
+      });
+
+      await waitForRun(initialRun);
     }
   };
 
@@ -82,7 +161,7 @@ export default function Home(): JSX.Element {
           </PreviewToolbar>
         </SandpackLayout>
       </SandpackProvider>
-      <PromptBar onSubmit={onSubmitPrompt} />
+      <PromptBar isGenerating={isGenerating} onSubmit={onSubmitPrompt} />
     </Provider>
   );
 }

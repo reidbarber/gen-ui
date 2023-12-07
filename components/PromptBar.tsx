@@ -16,7 +16,7 @@ import {
 } from "react-aria-components";
 import { useDrop } from "react-aria";
 
-export function PromptBar({ onSubmit }) {
+export function PromptBar({ onSubmit, isGenerating }) {
   let [value, setValue] = useState("");
   let onFormSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -151,7 +151,7 @@ export function PromptBar({ onSubmit }) {
 
           <Button
             type="submit"
-            isDisabled={value === ""}
+            isDisabled={value === "" || isGenerating}
             className="my-auto font-semibold text-white rounded-full disabled:bg-gray-300 disabled:text-gray-500 bg-accent-800 px-150 py-75 focus-visible:outline focus:outline-none"
           >
             Generate
