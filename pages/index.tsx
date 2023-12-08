@@ -121,10 +121,18 @@ export default function Home(): JSX.Element {
     if (thread) {
       setIsGenerating(true);
       // Send message to existing thread
-      let message = await createMessage(thread.id, {
+      await createMessage(thread.id, {
         role: "user",
         content: value,
       });
+
+      // Run the thread
+      let nextRun = await createRun(thread.id, {
+        assistant_id: assistantId,
+      });
+
+      await waitForRun(nextRun);
+      setIsGenerating(false);
     } else {
       setIsGenerating(true);
 
