@@ -3,6 +3,7 @@ import {
   FileDropItem,
   TextDropItem,
   Button as SpectrumButton,
+  Key,
 } from "@adobe/react-spectrum";
 import Image from "@spectrum-icons/workflow/Image";
 import ImageAdd from "@spectrum-icons/workflow/ImageAdd";
@@ -16,12 +17,29 @@ import {
   FileTrigger,
 } from "react-aria-components";
 import { useDrop } from "react-aria";
+import { StepList, Item } from "@react-spectrum/steplist";
+import { ThreadMessage } from "../data/types";
 
-export function PromptBar({ onSubmit, isGenerating }) {
-  let [value, setValue] = useState("");
+export function PromptBar({
+  onSubmit,
+  isGenerating,
+  messages,
+  selectedMessageId,
+  setSelectedMessageId,
+  promptValue,
+  setPromptValue,
+}: {
+  onSubmit: (value: string) => void;
+  isGenerating: boolean;
+  messages: ThreadMessage[];
+  selectedMessageId: Key | null;
+  setSelectedMessageId: React.Dispatch<React.SetStateAction<Key | null>>;
+  promptValue: string;
+  setPromptValue: React.Dispatch<React.SetStateAction<string>>;
+}) {
   let onFormSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    onSubmit(value);
+    onSubmit(promptValue);
   };
   let [isTextAreaFocused, setIsTextAreaFocused] = useState(false);
   let [files, setFiles] = useState([]);
@@ -45,7 +63,7 @@ export function PromptBar({ onSubmit, isGenerating }) {
           )
           .map((item: TextDropItem) => item.getText("text/plain"))
       );
-      setValue((prevValue) => prevValue + text.join("\n"));
+      setPromptValue((prevValue) => prevValue + text.join(""));
     },
   });
 
@@ -66,11 +84,11 @@ export function PromptBar({ onSubmit, isGenerating }) {
           onKeyDown={(e) => {
             if (e.key === "Enter" && !e.shiftKey) {
               e.preventDefault();
-              onSubmit(value);
+              onSubmit(promptValue);
             }
           }}
-          value={value}
-          onChange={setValue}
+          value={promptValue}
+          onChange={setPromptValue}
           aria-label="Prompt"
           className="block w-full"
         >
@@ -154,10 +172,33 @@ export function PromptBar({ onSubmit, isGenerating }) {
             variant="cta"
             type="submit"
             isPending={isGenerating}
-            isDisabled={value === ""}
+            isDisabled={promptValue === ""}
           >
             Generate
           </SpectrumButton>
+        </div>
+        <div className="m-auto">
+          {messages.length > 0 && (
+            <StepList
+              orientation="vertical"
+              isEmphasized
+              lastCompletedStep={messages[messages.length - 1].id}
+              selectedKey={selectedMessageId}
+              onSelectionChange={setSelectedMessageId}
+            >
+              {messages.map((message) => (
+                <Item key={message.id}>
+                  {message.content
+                    .map((content) =>
+                      content.type === "text"
+                        ? content.text.value
+                        : `Message ${message.id}`
+                    )
+                    .join(" ")}
+                </Item>
+              ))}
+            </StepList>
+          )}
         </div>
       </Group>
     </form>

@@ -10,10 +10,10 @@ import { SandpackProvider, SandpackLayout } from "@codesandbox/sandpack-react";
 import { PromptBar } from "../components/PromptBar";
 import { Editor } from "../components/Editor";
 import { defaultCustomSetup, defaultFiles } from "../data/sandpack";
-import { Run, Thread } from "../data/types";
+import { Run, Thread, ThreadMessage } from "../data/types";
 import { createRun, getRun, submitToolOutputs } from "../api/runs";
 import { createThread } from "../api/threads";
-import { createMessage } from "../api/messages";
+import { createMessage, listMessages } from "../api/messages";
 import { Preview } from "../components/Preview";
 import ThemeSwitcher from "../components/ThemeSwitcher";
 import PreviewToolbar from "../components/PreviewToolbar";
@@ -22,7 +22,7 @@ import { listAssistants } from "../api/assistants";
 import { AssistantDialog } from "../components/AssistantDialog";
 
 export default function Home(): JSX.Element {
-  let [colorScheme, setColorScheme] = useState<"light" | "dark">("dark");
+  let [colorScheme, setColorScheme] = useState<"light" | "dark">("dark"); // TODO: Default to system
   let [files, setFiles] = useState(defaultFiles);
   let [isGenerating, setIsGenerating] = useState(false);
   let [thread, setThread] = useState<Thread | null>(null);
@@ -32,6 +32,9 @@ export default function Home(): JSX.Element {
   );
   let assistantId = selectedAssistantId?.toString();
   let [showAssistantDialog, setShowAssistantDialog] = useState(true);
+  let [messages, setMessages] = useState<ThreadMessage[]>([]);
+  let [selectedMessageId, setSelectedMessageId] = useState<Key | null>(null);
+  let [promptValue, setPromptValue] = useState<string>("");
 
   // Load assistants
   useEffect(() => {
@@ -70,9 +73,7 @@ export default function Home(): JSX.Element {
   let waitForRun = async (run: Run) => {
     // Poll for status change
     while (run.status === "queued" || run.status === "in_progress") {
-      // delay for 500ms:
       await new Promise((resolve) => setTimeout(resolve, 500));
-
       run = await getRun(run.thread_id, run.id);
     }
 
@@ -83,7 +84,7 @@ export default function Home(): JSX.Element {
       run.status === "failed" ||
       run.status === "expired"
     ) {
-      throw new Error(run.status);
+      throw new Error(run.status); // TODO: Show alert
     }
 
     if (run.status === "requires_action") {
@@ -122,10 +123,13 @@ export default function Home(): JSX.Element {
     if (thread) {
       setIsGenerating(true);
       // Send message to existing thread
-      await createMessage(thread.id, {
+      let message = await createMessage(thread.id, {
         role: "user",
         content: value,
       });
+      setMessages((messages) => [...messages, message]);
+      setSelectedMessageId(message.id);
+      setPromptValue("");
 
       // Run the thread
       let nextRun = await createRun(thread.id, {
@@ -146,6 +150,10 @@ export default function Home(): JSX.Element {
           },
         ],
       });
+      let messages = await listMessages(newThread.id);
+      setMessages(messages.data);
+      setSelectedMessageId(messages.data[messages.data.length - 1].id);
+      setPromptValue("");
 
       setThread(newThread);
 
@@ -180,7 +188,15 @@ export default function Home(): JSX.Element {
           </PreviewToolbar>
         </SandpackLayout>
       </SandpackProvider>
-      <PromptBar isGenerating={isGenerating} onSubmit={onSubmitPrompt} />
+      <PromptBar
+        messages={messages}
+        selectedMessageId={selectedMessageId}
+        setSelectedMessageId={setSelectedMessageId}
+        isGenerating={isGenerating}
+        onSubmit={onSubmitPrompt}
+        promptValue={promptValue}
+        setPromptValue={setPromptValue}
+      />
       <DialogContainer
         isDismissable={false}
         onDismiss={() => setShowAssistantDialog(false)}
