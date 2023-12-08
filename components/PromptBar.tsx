@@ -2,6 +2,7 @@ import {
   ActionButton,
   FileDropItem,
   TextDropItem,
+  Button as SpectrumButton,
 } from "@adobe/react-spectrum";
 import Image from "@spectrum-icons/workflow/Image";
 import ImageAdd from "@spectrum-icons/workflow/ImageAdd";
@@ -149,13 +150,14 @@ export function PromptBar({ onSubmit, isGenerating }) {
             </div>
           </div>
 
-          <Button
+          <SpectrumButton
+            variant="cta"
             type="submit"
-            isDisabled={value === "" || isGenerating}
-            className="my-auto font-semibold text-white rounded-full disabled:bg-gray-300 disabled:text-gray-500 bg-accent-800 px-150 py-75 focus-visible:outline focus:outline-none"
+            isPending={isGenerating}
+            isDisabled={value === ""}
           >
             Generate
-          </Button>
+          </SpectrumButton>
         </div>
       </Group>
     </form>

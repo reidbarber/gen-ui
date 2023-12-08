@@ -53,3 +53,7 @@ export interface StepListParams
 
 export interface RunSubmitToolOutputsParams
   extends OpenAI.Beta.Threads.Runs.RunSubmitToolOutputsParams {}
+
+export interface AssistantsPage extends OpenAI.Beta.Assistants.AssistantsPage {}
+
+export interface Assistant extends OpenAI.Beta.Assistants.Assistant {}

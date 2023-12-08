@@ -9,14 +9,12 @@ export default function ThemeSwitcher({ setColorScheme }) {
   let otherScheme = colorScheme === "light" ? "dark" : "light";
 
   return (
-    <div className="absolute right-75">
-      <ActionButton
-        isQuiet
-        aria-label={label}
-        onPress={() => setColorScheme(otherScheme)}
-      >
-        {colorScheme === "dark" ? <Light /> : <Moon />}
-      </ActionButton>
-    </div>
+    <ActionButton
+      isQuiet
+      aria-label={label}
+      onPress={() => setColorScheme(otherScheme)}
+    >
+      {colorScheme === "dark" ? <Light /> : <Moon />}
+    </ActionButton>
   );
 }

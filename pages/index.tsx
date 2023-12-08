@@ -1,38 +1,45 @@
 import React, { useEffect, useState } from "react";
-import { defaultTheme, Provider } from "@adobe/react-spectrum";
+import {
+  defaultTheme,
+  Item,
+  Picker,
+  Provider,
+  Key,
+} from "@adobe/react-spectrum";
 import Head from "next/head";
 import { SandpackProvider, SandpackLayout } from "@codesandbox/sandpack-react";
 import { PromptBar } from "../components/PromptBar";
 import { Editor } from "../components/Editor";
 import { defaultCustomSetup, defaultFiles } from "../data/sandpack";
-import {
-  Run,
-  RunSubmitToolOutputsParams,
-  Thread,
-  ThreadMessage,
-} from "../data/types";
-import {
-  createRun,
-  createThreadAndRun,
-  getRun,
-  getRunStep,
-  listRunSteps,
-  submitToolOutputs,
-} from "../api/runs";
-import { createThread, getThread } from "../api/threads";
+import { Run, Thread } from "../data/types";
+import { createRun, getRun, submitToolOutputs } from "../api/runs";
+import { createThread } from "../api/threads";
 import { createMessage } from "../api/messages";
 import { Preview } from "../components/Preview";
 import ThemeSwitcher from "../components/ThemeSwitcher";
 import PreviewToolbar from "../components/PreviewToolbar";
+import { Assistant } from "openai/resources/beta/assistants/assistants";
+import { listAssistants } from "../api/assistants";
 
 export default function Home(): JSX.Element {
   let [colorScheme, setColorScheme] = useState<"light" | "dark">("dark");
   let [files, setFiles] = useState(defaultFiles);
   let [isGenerating, setIsGenerating] = useState(false);
-  let [assistantId, setAssistantId] = useState<string | null>(
-    "asst_qeVSVzTtaiwE4MTl3rUMxd7u"
-  );
   let [thread, setThread] = useState<Thread | null>(null);
+  let [assistants, setAssistants] = useState<Assistant[] | null>(null);
+  let [selectedAssistantId, setSelectedAssistantId] = useState<Key | null>(
+    null
+  );
+  let assistantId = selectedAssistantId?.toString();
+
+  // Load assistants
+  useEffect(() => {
+    (async () => {
+      let assistants = await listAssistants();
+      setAssistants(assistants.data);
+      setSelectedAssistantId(assistants.data[0].id);
+    })();
+  }, []);
 
   // Define functions that update files
   let updateFile = (path: string, code: string) => {
@@ -139,6 +146,7 @@ export default function Home(): JSX.Element {
       });
 
       await waitForRun(initialRun);
+      setIsGenerating(false);
     }
   };
 
@@ -157,7 +165,21 @@ export default function Home(): JSX.Element {
           <Editor colorScheme={colorScheme} />
           <Preview setColorScheme={setColorScheme} />
           <PreviewToolbar>
-            <ThemeSwitcher setColorScheme={setColorScheme} />
+            <div className="absolute right-75">
+              <Picker
+                marginEnd="size-100"
+                selectedKey={selectedAssistantId}
+                onSelectionChange={setSelectedAssistantId}
+                aria-label="Assistants"
+                isLoading={assistants === null}
+                items={assistants || []}
+                placeholder="Assistant"
+                isQuiet
+              >
+                {(item) => <Item>{item.name}</Item>}
+              </Picker>
+              <ThemeSwitcher setColorScheme={setColorScheme} />
+            </div>
           </PreviewToolbar>
         </SandpackLayout>
       </SandpackProvider>
