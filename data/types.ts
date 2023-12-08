@@ -29,6 +29,9 @@ export interface ThreadMessage extends OpenAI.Beta.Threads.ThreadMessage {}
 export interface MessageCreateParams
   extends OpenAI.Beta.Threads.MessageCreateParams {}
 
+export interface MessageUpdateParams
+  extends OpenAI.Beta.Threads.MessageUpdateParams {}
+
 export interface Files extends OpenAI.Beta.Threads.Messages.Files {}
 
 export interface MessageFile extends OpenAI.Beta.Threads.Messages.MessageFile {}

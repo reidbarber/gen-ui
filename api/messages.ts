@@ -3,6 +3,7 @@ import {
   ThreadMessage,
   MessageListParams,
   ThreadMessagesPage,
+  MessageUpdateParams,
 } from "../data/types";
 
 const headers = {
@@ -33,7 +34,7 @@ export async function getMessage(
 export async function updateMessage(
   thread_id: string,
   message_id: string,
-  body: MessageCreateParams
+  body: MessageUpdateParams
 ): Promise<ThreadMessage> {
   return fetch(`api/threads/${thread_id}/messages/${message_id}`, {
     method: "POST",
