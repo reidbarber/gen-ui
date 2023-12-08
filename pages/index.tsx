@@ -3,15 +3,7 @@ import {
   defaultTheme,
   Provider,
   Key,
-  Dialog,
-  Heading,
-  Divider,
-  Content,
-  Button,
   DialogContainer,
-  ButtonGroup,
-  ProgressCircle,
-  Link,
 } from "@adobe/react-spectrum";
 import Head from "next/head";
 import { SandpackProvider, SandpackLayout } from "@codesandbox/sandpack-react";
@@ -27,7 +19,6 @@ import ThemeSwitcher from "../components/ThemeSwitcher";
 import PreviewToolbar from "../components/PreviewToolbar";
 import { Assistant } from "openai/resources/beta/assistants/assistants";
 import { listAssistants } from "../api/assistants";
-import { Radio, RadioGroup } from "react-aria-components";
 import { AssistantDialog } from "../components/AssistantDialog";
 
 export default function Home(): JSX.Element {
