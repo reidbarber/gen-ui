@@ -13,9 +13,6 @@ export const defaultFiles = {
   "/public/index.html": {
     code: '<!DOCTYPE html>\n<html lang="en">\n  <head>\n    <meta charset="UTF-8">\n    <meta name="viewport" content="width=device-width, initial-scale=1.0">\n    <title>Document</title>\n  </head>\n  <body>\n    <div id="app"></div>\n  </body>\n</html>',
   },
-  "/package.json": {
-    code: '{\n  "name": "sandpack-project",\n  "main": "/index.js",\n  "dependencies": {\n    "react": "^17.0.0",\n    "react-dom": "^17.0.0",\n    "react-scripts": "^4.0.0"\n  },\n  "devDependencies": {}\n}',
-  },
 };
 
 export const defaultCustomSetup = {
