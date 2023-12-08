@@ -79,7 +79,7 @@ export function PromptBar({
         } [.text-area-focused&:has([data-focus-visible])]:outline border-none py-200 px-300 flex flex-col mx-auto my-300 align-middle bg-gray-50 border rounded-[var(--spectrum-global-dimension-size-300)] shadow-md w-[85%]`}
       >
         <TextField
-          onFocus={(e) => setIsTextAreaFocused(true)}
+          onFocus={() => setIsTextAreaFocused(true)}
           onBlur={() => setIsTextAreaFocused(false)}
           onKeyDown={(e) => {
             if (e.key === "Enter" && !e.shiftKey) {
@@ -174,7 +174,7 @@ export function PromptBar({
             isPending={isGenerating}
             isDisabled={promptValue === ""}
           >
-            Generate
+            {messages.length === 0 ? "Generate" : "Update"}
           </SpectrumButton>
         </div>
         <div className="m-auto">
