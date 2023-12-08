@@ -14,12 +14,6 @@ export function Editor({ colorScheme }) {
 
   const language = getLanguageOfFile(sandpack.activeFile);
 
-  let updateFile = (file: string, code: string) => {
-    sandpack.updateFile(file, code);
-  };
-
-  let files = sandpack.files;
-
   return (
     <SandpackStack style={{ height: "100vh", margin: 0 }}>
       <FileTabs className="z-[5]" style={{ border: "none" }} />

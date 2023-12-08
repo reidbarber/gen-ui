@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from "react";
 import {
   defaultTheme,
-  Item,
-  Picker,
   Provider,
   Key,
-  useDialogContainer,
   Dialog,
   Heading,
   Divider,
@@ -13,6 +10,7 @@ import {
   Button,
   DialogContainer,
   ButtonGroup,
+  ProgressCircle,
 } from "@adobe/react-spectrum";
 import Head from "next/head";
 import { SandpackProvider, SandpackLayout } from "@codesandbox/sandpack-react";
@@ -169,18 +167,18 @@ export default function Home(): JSX.Element {
   };
 
   function AssistantDialog() {
-    let dialog = useDialogContainer();
-
     return (
       <Dialog>
         <Heading>Select an Assistant</Heading>
         <Divider />
         <Content>
-          {assistants === null && "Loading..."}
+          {assistants === null && (
+            <ProgressCircle aria-label="Loading assistants" />
+          )}
           {assistants?.length === 0 && "No assistants found."}
           {assistants?.length > 0 && (
             <RadioGroup
-              className="flex space-y-2 text-center items-center justify-center"
+              className="flex items-center justify-center space-y-2 text-center"
               aria-label="Available assistants"
               value={selectedAssistantId.toString()}
               onChange={setSelectedAssistantId}
@@ -197,7 +195,7 @@ export default function Home(): JSX.Element {
                         <div className="absolute top-0 left-0 -mt-75 -ml-75">
                           <div className="h-[14px] w-[14px] bg-accent-900 rounded-small">
                             <svg
-                              className="fill-gray-75 pt-[2px] pl-[2px]"
+                              className="fill-gray-75 pt-[2px] pl-[2px] w-[14px] h-[14px]"
                               focusable="false"
                               aria-hidden="true"
                               role="img"
@@ -217,14 +215,16 @@ export default function Home(): JSX.Element {
               ))}
             </RadioGroup>
           )}
-          <div className="text-center">
-            <Link
-              className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
-              href="https://platform.openai.com/assistants"
-            >
-              Create an assistant
-            </Link>
-          </div>
+          {assistants !== null && (
+            <div className="text-center">
+              <Link
+                className="font-medium underline text-accent-1000"
+                href="https://platform.openai.com/assistants"
+              >
+                Create an assistant
+              </Link>
+            </div>
+          )}
         </Content>
         <ButtonGroup>
           <Button
@@ -251,7 +251,7 @@ export default function Home(): JSX.Element {
       >
         <SandpackLayout style={{ border: "none" }}>
           <Editor colorScheme={colorScheme} />
-          <Preview setColorScheme={setColorScheme} />
+          <Preview />
           <PreviewToolbar>
             <div className="absolute right-75">
               <ThemeSwitcher setColorScheme={setColorScheme} />
