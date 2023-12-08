@@ -9,7 +9,7 @@ Use text or image prompts to generate components and apps built with React.
 Create a `.env.local` file in the root of the project and add your OpenAI API key:
 
 ```bash
-OPENAI_KEY=sk-...
+OPENAI_API_KEY=sk-...
 ```
 
 ### Create an [Assistant](https://platform.openai.com/playground?mode=assistant)
