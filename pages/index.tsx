@@ -11,6 +11,7 @@ import {
   DialogContainer,
   ButtonGroup,
   ProgressCircle,
+  Link,
 } from "@adobe/react-spectrum";
 import Head from "next/head";
 import { SandpackProvider, SandpackLayout } from "@codesandbox/sandpack-react";
@@ -26,7 +27,7 @@ import ThemeSwitcher from "../components/ThemeSwitcher";
 import PreviewToolbar from "../components/PreviewToolbar";
 import { Assistant } from "openai/resources/beta/assistants/assistants";
 import { listAssistants } from "../api/assistants";
-import { Link, Radio, RadioGroup } from "react-aria-components";
+import { Radio, RadioGroup } from "react-aria-components";
 
 export default function Home(): JSX.Element {
   let [colorScheme, setColorScheme] = useState<"light" | "dark">("dark");
@@ -180,13 +181,13 @@ export default function Home(): JSX.Element {
             <RadioGroup
               className="flex items-center justify-center space-y-2 text-center"
               aria-label="Available assistants"
-              value={selectedAssistantId.toString()}
+              value={assistantId}
               onChange={setSelectedAssistantId}
             >
               {assistants?.map((assistant) => (
                 <Radio
                   key={assistant.id}
-                  value={assistant.id.toString()}
+                  value={assistant.id}
                   className="flex justify-center bg-white border rounded dark:bg-black p-160 m-160 h-1200 w-2000 focus:outline-none focus-visible:ring-half focus-visible:ring-offset-0 selected:bg-accent-100 selected:border-accent-700"
                 >
                   {({ isSelected }) => (
@@ -217,8 +218,10 @@ export default function Home(): JSX.Element {
           )}
           {assistants !== null && (
             <div className="text-center">
+              {assistants?.length > 0 && <div>or</div>}
               <Link
-                className="font-medium underline text-accent-1000"
+                target="_blank"
+                rel="noopener noreferrer"
                 href="https://platform.openai.com/assistants"
               >
                 Create an assistant
