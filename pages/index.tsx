@@ -5,6 +5,14 @@ import {
   Picker,
   Provider,
   Key,
+  useDialogContainer,
+  Dialog,
+  Heading,
+  Divider,
+  Content,
+  Button,
+  DialogContainer,
+  ButtonGroup,
 } from "@adobe/react-spectrum";
 import Head from "next/head";
 import { SandpackProvider, SandpackLayout } from "@codesandbox/sandpack-react";
@@ -20,6 +28,7 @@ import ThemeSwitcher from "../components/ThemeSwitcher";
 import PreviewToolbar from "../components/PreviewToolbar";
 import { Assistant } from "openai/resources/beta/assistants/assistants";
 import { listAssistants } from "../api/assistants";
+import { Link, Radio, RadioGroup } from "react-aria-components";
 
 export default function Home(): JSX.Element {
   let [colorScheme, setColorScheme] = useState<"light" | "dark">("dark");
@@ -31,6 +40,7 @@ export default function Home(): JSX.Element {
     null
   );
   let assistantId = selectedAssistantId?.toString();
+  let [showSelectAssistant, setShowSelectAssistant] = useState(true);
 
   // Load assistants
   useEffect(() => {
@@ -158,6 +168,76 @@ export default function Home(): JSX.Element {
     }
   };
 
+  function AssistantDialog() {
+    let dialog = useDialogContainer();
+
+    return (
+      <Dialog>
+        <Heading>Select an Assistant</Heading>
+        <Divider />
+        <Content>
+          {assistants === null && "Loading..."}
+          {assistants?.length === 0 && "No assistants found."}
+          {assistants?.length > 0 && (
+            <RadioGroup
+              className="flex space-y-2 text-center items-center justify-center"
+              aria-label="Available assistants"
+              value={selectedAssistantId.toString()}
+              onChange={setSelectedAssistantId}
+            >
+              {assistants?.map((assistant) => (
+                <Radio
+                  key={assistant.id}
+                  value={assistant.id.toString()}
+                  className="flex justify-center bg-white border rounded dark:bg-black p-160 m-160 h-1200 w-2000 focus:outline-none focus-visible:ring-half focus-visible:ring-offset-0 selected:bg-accent-100 selected:border-accent-700"
+                >
+                  {({ isSelected }) => (
+                    <div className="relative flex flex-col items-center justify-center w-full h-full gap-150">
+                      {isSelected && (
+                        <div className="absolute top-0 left-0 -mt-75 -ml-75">
+                          <div className="h-[14px] w-[14px] bg-accent-900 rounded-small">
+                            <svg
+                              className="fill-gray-75 pt-[2px] pl-[2px]"
+                              focusable="false"
+                              aria-hidden="true"
+                              role="img"
+                            >
+                              <path d="M3.788 9A.999.999 0 0 1 3 8.615l-2.288-3a1 1 0 1 1 1.576-1.23l1.5 1.991 3.924-4.991a1 1 0 1 1 1.576 1.23l-4.712 6A.999.999 0 0 1 3.788 9z"></path>
+                            </svg>
+                          </div>
+                        </div>
+                      )}
+                      <div className="font-semibold">{assistant.name}</div>
+                      {assistant.description && (
+                        <div className="text-sm">{assistant.description}</div>
+                      )}
+                    </div>
+                  )}
+                </Radio>
+              ))}
+            </RadioGroup>
+          )}
+          <div className="text-center">
+            <Link
+              className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+              href="https://platform.openai.com/assistants"
+            >
+              Create an assistant
+            </Link>
+          </div>
+        </Content>
+        <ButtonGroup>
+          <Button
+            variant="accent"
+            onPress={() => setShowSelectAssistant(false)}
+          >
+            Start
+          </Button>
+        </ButtonGroup>
+      </Dialog>
+    );
+  }
+
   return (
     <Provider colorScheme={colorScheme} theme={defaultTheme} locale="en-US">
       <Head>
@@ -174,24 +254,18 @@ export default function Home(): JSX.Element {
           <Preview setColorScheme={setColorScheme} />
           <PreviewToolbar>
             <div className="absolute right-75">
-              <Picker
-                marginEnd="size-100"
-                selectedKey={selectedAssistantId}
-                onSelectionChange={setSelectedAssistantId}
-                aria-label="Assistants"
-                isLoading={assistants === null}
-                items={assistants || []}
-                placeholder="Assistant"
-                isQuiet
-              >
-                {(item) => <Item>{item.name}</Item>}
-              </Picker>
               <ThemeSwitcher setColorScheme={setColorScheme} />
             </div>
           </PreviewToolbar>
         </SandpackLayout>
       </SandpackProvider>
       <PromptBar isGenerating={isGenerating} onSubmit={onSubmitPrompt} />
+      <DialogContainer
+        isDismissable={false}
+        onDismiss={() => setShowSelectAssistant(false)}
+      >
+        {showSelectAssistant && <AssistantDialog />}
+      </DialogContainer>
     </Provider>
   );
 }
