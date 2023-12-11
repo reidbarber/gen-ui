@@ -3,7 +3,6 @@ import {
   FileDropItem,
   TextDropItem,
   Button as SpectrumButton,
-  Key,
 } from "@adobe/react-spectrum";
 import Image from "@spectrum-icons/workflow/Image";
 import ImageAdd from "@spectrum-icons/workflow/ImageAdd";
@@ -17,23 +16,18 @@ import {
   FileTrigger,
 } from "react-aria-components";
 import { useDrop } from "react-aria";
-import { StepList, Item } from "@react-spectrum/steplist";
 import { ThreadMessage } from "../data/types";
 
 export function PromptBar({
   onSubmit,
   isGenerating,
   messages,
-  selectedMessageId,
-  setSelectedMessageId,
   promptValue,
   setPromptValue,
 }: {
   onSubmit: (value: string) => void;
   isGenerating: boolean;
   messages: ThreadMessage[];
-  selectedMessageId: Key | null;
-  setSelectedMessageId: React.Dispatch<React.SetStateAction<Key | null>>;
   promptValue: string;
   setPromptValue: React.Dispatch<React.SetStateAction<string>>;
 }) {
