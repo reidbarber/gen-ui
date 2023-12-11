@@ -2,7 +2,7 @@
 
 Use text or image prompts to generate components and apps built with React. Powered by OpenAI's [Assistant's API](https://platform.openai.com/docs/assistants/overview) and CodeSandbox's [Sandpack](https://sandpack.codesandbox.io/).
 
-![Screenshot of GenUI Studio with a timeline panel on the left, code in the middle, rendered example on the right, and prompt bar overlayed on bottom. Example shows a signup form being built.](https://github.com/reidbarber/GenUI/assets/8961049/f3756d6a-0ee0-4816-aea0-42ddbf0f4aeb)
+![Screenshot of GenUI Studio with a timeline panel on the left, code in the middle, rendered example on the right, and prompt bar overlayed on bottom. Example shows a signup form being built.](https://github.com/reidbarber/GenUI/assets/8961049/a5948a4a-56a2-46b2-bad0-1b38a4068c75)
 
 ## Get Started
 
