@@ -23,7 +23,9 @@ export function AssistantDialog({
       <Divider />
       <Content>
         {assistants === null && (
-          <ProgressCircle aria-label="Loading assistants" />
+          <div className="flex justify-center">
+            <ProgressCircle aria-label="Loading assistants" isIndeterminate />
+          </div>
         )}
         {assistants?.length === 0 && "No assistants found."}
         {assistants?.length > 0 && (
