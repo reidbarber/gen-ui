@@ -1,9 +1,11 @@
+import { ProgressCircle } from "@adobe/react-spectrum";
 import { Item, StepList } from "@react-spectrum/steplist";
 
 export function Timeline({
   messages,
   selectedMessageId,
   setSelectedMessageId,
+  isGenerating,
 }) {
   return (
     <div className="w-3000 h-full pt-[45px] px-150">
@@ -32,6 +34,14 @@ export function Timeline({
               </Item>
             ))}
           </StepList>
+        )}
+        {isGenerating && (
+          <div className="flex justify-center p-150">
+            <ProgressCircle
+              UNSAFE_style={{ display: "block" }}
+              isIndeterminate
+            />
+          </div>
         )}
       </div>
     </div>

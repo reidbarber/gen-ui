@@ -136,6 +136,7 @@ export default function Main({
           messages={messages}
           selectedMessageId={selectedMessageId}
           setSelectedMessageId={setSelectedMessageId}
+          isGenerating={isGenerating}
         />
         <Editor colorScheme={colorScheme} />
         <Preview />
