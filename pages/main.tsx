@@ -140,10 +140,10 @@ export default function Main({
         <Editor colorScheme={colorScheme} />
         <Preview />
         <PreviewToolbar>
-          <div className="w-3000 absolute left-75 font-bold text-2xl py-50 px-150">
+          <div className="w-3000 absolute left-75 font-bold text-2xl py-100 px-150">
             GenUI Studio
           </div>
-          <div className="absolute right-75">
+          <div className="absolute right-100 pt-50">
             <ThemeSwitcher setColorScheme={setColorScheme} />
           </div>
         </PreviewToolbar>
