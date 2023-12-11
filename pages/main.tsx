@@ -11,6 +11,7 @@ import { Preview } from "../components/Preview";
 import ThemeSwitcher from "../components/ThemeSwitcher";
 import PreviewToolbar from "../components/PreviewToolbar";
 import { Timeline } from "../components/Timeline";
+import { OpenInSandboxButton } from "../components/OpenInSandboxButton";
 
 export default function Main({
   setColorScheme,
@@ -144,7 +145,8 @@ export default function Main({
           <div className="w-3000 absolute left-75 font-bold text-2xl py-100 px-150">
             GenUI Studio
           </div>
-          <div className="absolute right-100 pt-50">
+          <div className="absolute flex gap-100 right-100 pt-50">
+            <OpenInSandboxButton />
             <ThemeSwitcher setColorScheme={setColorScheme} />
           </div>
         </PreviewToolbar>
