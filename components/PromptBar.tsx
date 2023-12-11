@@ -95,7 +95,11 @@ export function PromptBar({
           <Label className="text-gray-600">Prompt</Label>
           <TextArea
             autoFocus
-            placeholder="Describe the app or component you want to generate"
+            placeholder={
+              messages.length === 0
+                ? "Describe the app or component you want to generate"
+                : "Describe the updates you would like to make"
+            }
             className="w-full bg-transparent resize-none p-50 focus:outline-none"
           />
         </TextField>
