@@ -45,52 +45,53 @@ export default function Main({
       throw new Error(run.status); // TODO: Show alert
     }
 
-    if (run.status === "requires_action") {
-      if (run.required_action?.type === "submit_tool_outputs") {
-        const tool_outputs =
-          run.required_action.submit_tool_outputs.tool_calls.map((toolCall) => {
-            const args = JSON.parse(toolCall.function.arguments);
-            let output = {
-              success: true,
-              errors: [],
-            };
-            switch (toolCall.function.name) {
-              case "updateFile":
-                updateFile(args.path, args.code);
-                break;
-              case "addFile":
-                addFile(args.path, args.code);
-                break;
-              case "deleteFile":
-                deleteFile(args.path);
-                break;
-              case "getErrors":
-                output["errors"] = error ? [error] : [];
-                break;
-              case "readFile":
-                output["result"] = { content: sandpack.files[args.path].code };
-                break;
-              case "listFiles":
-                output["result"] = { paths: Object.keys(sandpack.files) };
-                break;
-              default:
-                throw new Error(
-                  `Unknown tool call function: ${toolCall.function.name}`
-                );
-            }
+    if (
+      run.status === "requires_action" &&
+      run.required_action?.type === "submit_tool_outputs"
+    ) {
+      const tool_outputs =
+        run.required_action.submit_tool_outputs.tool_calls.map((toolCall) => {
+          const args = JSON.parse(toolCall.function.arguments);
+          let output = {
+            success: true,
+            errors: [],
+          };
+          switch (toolCall.function.name) {
+            case "updateFile":
+              updateFile(args.path, args.code);
+              break;
+            case "addFile":
+              addFile(args.path, args.code);
+              break;
+            case "deleteFile":
+              deleteFile(args.path);
+              break;
+            case "getErrors":
+              output["errors"] = error ? [error] : [];
+              break;
+            case "readFile":
+              output["result"] = { content: sandpack.files[args.path].code };
+              break;
+            case "listFiles":
+              output["result"] = { paths: Object.keys(sandpack.files) };
+              break;
+            default:
+              throw new Error(
+                `Unknown tool call function: ${toolCall.function.name}`
+              );
+          }
 
-            return {
-              tool_call_id: toolCall.id,
-              output: JSON.stringify(output),
-            };
-          });
-
-        run = await submitToolOutputs(run.thread_id, run.id, {
-          tool_outputs,
+          return {
+            tool_call_id: toolCall.id,
+            output: JSON.stringify(output),
+          };
         });
 
-        await waitForRun(run);
-      }
+      run = await submitToolOutputs(run.thread_id, run.id, {
+        tool_outputs,
+      });
+
+      await waitForRun(run);
     }
   };
 
