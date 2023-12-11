@@ -30,7 +30,7 @@ export function Editor({ colorScheme }) {
           language={language}
           theme={colorScheme === "dark" ? "vs-dark" : "light"}
           key={sandpack.activeFile}
-          defaultValue={code}
+          value={code}
           onChange={(value) => updateCode(value || "")}
         />
       </div>
