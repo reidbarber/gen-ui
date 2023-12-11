@@ -11,7 +11,6 @@
   "dependencies": {
     "@adobe/react-spectrum": "^3.32.2",
     "@codesandbox/sandpack-react": "^2.10.0",
-    "@isomorphic-git/lightning-fs": "^4.6.0",
     "@monaco-editor/react": "^4.6.0",
     "@react-spectrum/steplist": "^3.0.0-alpha.0",
     "@spectrum-icons/illustrations": "^3.6.8",

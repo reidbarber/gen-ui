@@ -1,4 +1,4 @@
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Key } from "@adobe/react-spectrum";
 import { SandpackLayout, useSandpack } from "@codesandbox/sandpack-react";
 import { PromptBar } from "../components/PromptBar";
@@ -9,7 +9,7 @@ import { createThread } from "../api/threads";
 import { createMessage, listMessages } from "../api/messages";
 import { Preview } from "../components/Preview";
 import ThemeSwitcher from "../components/ThemeSwitcher";
-import PreviewToolbar from "../components/PreviewToolbar";
+import NavBar from "../components/NavBar";
 import { Timeline } from "../components/Timeline";
 import { OpenInSandboxButton } from "../components/OpenInSandboxButton";
 
@@ -141,20 +141,18 @@ export default function Main({
         />
         <Editor colorScheme={colorScheme} />
         <Preview />
-        <PreviewToolbar>
-          <div className="w-3000 absolute left-75 font-bold text-2xl py-100 px-150">
+        <NavBar>
+          <div className="absolute text-2xl font-bold w-3000 left-75 py-100 px-150">
             GenUI Studio
           </div>
           <div className="absolute flex gap-100 right-100 pt-50">
             <OpenInSandboxButton />
             <ThemeSwitcher setColorScheme={setColorScheme} />
           </div>
-        </PreviewToolbar>
+        </NavBar>
       </SandpackLayout>
       <PromptBar
         messages={messages}
-        selectedMessageId={selectedMessageId}
-        setSelectedMessageId={setSelectedMessageId}
         isGenerating={isGenerating}
         onSubmit={onSubmitPrompt}
         promptValue={promptValue}

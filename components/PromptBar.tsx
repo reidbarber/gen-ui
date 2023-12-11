@@ -3,7 +3,6 @@ import {
   FileDropItem,
   TextDropItem,
   Button as SpectrumButton,
-  Key,
 } from "@adobe/react-spectrum";
 import Image from "@spectrum-icons/workflow/Image";
 import ImageAdd from "@spectrum-icons/workflow/ImageAdd";
@@ -17,23 +16,18 @@ import {
   FileTrigger,
 } from "react-aria-components";
 import { useDrop } from "react-aria";
-import { StepList, Item } from "@react-spectrum/steplist";
 import { ThreadMessage } from "../data/types";
 
 export function PromptBar({
   onSubmit,
   isGenerating,
   messages,
-  selectedMessageId,
-  setSelectedMessageId,
   promptValue,
   setPromptValue,
 }: {
   onSubmit: (value: string) => void;
   isGenerating: boolean;
   messages: ThreadMessage[];
-  selectedMessageId: Key | null;
-  setSelectedMessageId: React.Dispatch<React.SetStateAction<Key | null>>;
   promptValue: string;
   setPromptValue: React.Dispatch<React.SetStateAction<string>>;
 }) {
@@ -79,7 +73,7 @@ export function PromptBar({
         } [.text-area-focused&:has([data-focus-visible])]:outline border-none py-200 px-300 flex flex-col mx-auto my-300 align-middle bg-gray-50 border rounded-[var(--spectrum-global-dimension-size-300)] shadow-md w-[85%]`}
       >
         <TextField
-          onFocus={(e) => setIsTextAreaFocused(true)}
+          onFocus={() => setIsTextAreaFocused(true)}
           onBlur={() => setIsTextAreaFocused(false)}
           onKeyDown={(e) => {
             if (e.key === "Enter" && !e.shiftKey) {
@@ -95,7 +89,11 @@ export function PromptBar({
           <Label className="text-gray-600">Prompt</Label>
           <TextArea
             autoFocus
-            placeholder="Describe the app or component you want to generate"
+            placeholder={
+              messages.length === 0
+                ? "Describe the app or component you want to generate"
+                : "Describe the updates you would like to make"
+            }
             className="w-full bg-transparent resize-none p-50 focus:outline-none"
           />
         </TextField>
@@ -175,7 +173,7 @@ export function PromptBar({
             isPending={isGenerating}
             isDisabled={promptValue === ""}
           >
-            Generate
+            {messages.length === 0 ? "Generate" : "Update"}
           </SpectrumButton>
         </div>
       </Group>
