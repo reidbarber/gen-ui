@@ -58,6 +58,7 @@ export default function Home(): JSX.Element {
         customSetup={sandpackConfig.customSetup}
         theme={colorScheme}
         template="react"
+        options={{ autoReload: true }}
       >
         {assistantId && (
           <Main
