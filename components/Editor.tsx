@@ -19,6 +19,11 @@ export function Editor({ colorScheme }) {
       <FileTabs className="z-[5]" style={{ border: "none" }} />
       <div className="flex-1 bg-gray-50">
         <MonacoEditor
+          options={{
+            minimap: {
+              enabled: false,
+            },
+          }}
           width="100%"
           height="100%"
           language={language}
