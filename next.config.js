@@ -1,4 +1,8 @@
 module.exports = {
+  i18n: {
+    locales: ["en"],
+    defaultLocale: "en",
+  },
   transpilePackages: [
     "@adobe/react-spectrum",
     "@react-spectrum/actionbar",
