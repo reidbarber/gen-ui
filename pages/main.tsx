@@ -138,7 +138,6 @@ export default function Main({
       await waitForRun(initialRun);
     }
 
-    dispatch({ type: "refresh" });
     setIsGenerating(false);
   };
 
