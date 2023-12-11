@@ -38,6 +38,7 @@ export function Timeline({
         {isGenerating && (
           <div className="flex justify-center p-150">
             <ProgressCircle
+              aria-label="Generating..."
               UNSAFE_style={{ display: "block" }}
               isIndeterminate
             />
