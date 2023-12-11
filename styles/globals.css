@@ -4,6 +4,7 @@
 
 body {
   margin: 0;
+  background: #1d1d1d; /* TODO: support both themes */
 }
 
 .no-border {

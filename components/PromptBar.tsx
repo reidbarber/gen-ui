@@ -94,6 +94,7 @@ export function PromptBar({
         >
           <Label className="text-gray-600">Prompt</Label>
           <TextArea
+            autoFocus
             placeholder="Describe the app or component you want to generate"
             className="w-full bg-transparent resize-none p-50 focus:outline-none"
           />
@@ -176,29 +177,6 @@ export function PromptBar({
           >
             {messages.length === 0 ? "Generate" : "Update"}
           </SpectrumButton>
-        </div>
-        <div className="m-auto">
-          {messages.length > 0 && (
-            <StepList
-              orientation="vertical"
-              isEmphasized
-              lastCompletedStep={messages[messages.length - 1].id}
-              selectedKey={selectedMessageId}
-              onSelectionChange={setSelectedMessageId}
-            >
-              {messages.map((message) => (
-                <Item key={message.id}>
-                  {message.content
-                    .map((content) =>
-                      content.type === "text"
-                        ? content.text.value
-                        : `Message ${message.id}`
-                    )
-                    .join(" ")}
-                </Item>
-              ))}
-            </StepList>
-          )}
         </div>
       </Group>
     </form>

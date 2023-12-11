@@ -12,9 +12,10 @@ import { Radio, RadioGroup } from "react-aria-components";
 
 export function AssistantDialog({
   assistants,
-  assistantId,
-  setSelectedAssistantId,
+  assistantSelectorValue,
+  setAssistantSelectorValue,
   setShowAssistantDialog,
+  setSelectedAssistantId,
 }) {
   return (
     <Dialog>
@@ -22,15 +23,17 @@ export function AssistantDialog({
       <Divider />
       <Content>
         {assistants === null && (
-          <ProgressCircle aria-label="Loading assistants" />
+          <div className="flex justify-center">
+            <ProgressCircle aria-label="Loading assistants" isIndeterminate />
+          </div>
         )}
         {assistants?.length === 0 && "No assistants found."}
         {assistants?.length > 0 && (
           <RadioGroup
             className="flex items-center justify-center space-y-2 text-center"
             aria-label="Available assistants"
-            value={assistantId}
-            onChange={setSelectedAssistantId}
+            value={assistantSelectorValue}
+            onChange={setAssistantSelectorValue}
           >
             {assistants?.map((assistant) => (
               <Radio
@@ -73,12 +76,19 @@ export function AssistantDialog({
               href="https://platform.openai.com/assistants"
             >
               Create an assistant
+              {/** TODO: Update to point to github */}
             </Link>
           </div>
         )}
       </Content>
       <ButtonGroup>
-        <Button variant="accent" onPress={() => setShowAssistantDialog(false)}>
+        <Button
+          variant="accent"
+          onPress={() => {
+            setShowAssistantDialog(false);
+            setSelectedAssistantId(assistantSelectorValue);
+          }}
+        >
           Start
         </Button>
       </ButtonGroup>
