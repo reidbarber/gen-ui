@@ -79,8 +79,8 @@ export default function Main({
   };
 
   let onSubmitPrompt = async (value: string) => {
+    setIsGenerating(true);
     if (thread) {
-      setIsGenerating(true);
       // Send message to existing thread
       let message = await createMessage(thread.id, {
         role: "user",
@@ -96,10 +96,7 @@ export default function Main({
       });
 
       await waitForRun(nextRun);
-      setIsGenerating(false);
     } else {
-      setIsGenerating(true);
-
       // Create a thread with a message
       let newThread = await createThread({
         messages: [
@@ -122,9 +119,10 @@ export default function Main({
       });
 
       await waitForRun(initialRun);
-      setIsGenerating(false);
-      dispatch({ type: "refresh" });
     }
+
+    dispatch({ type: "refresh" });
+    setIsGenerating(false);
   };
 
   useEffect(() => {
