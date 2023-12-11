@@ -38,6 +38,7 @@ module.exports = {
     "@react-spectrum/slider",
     "@react-spectrum/searchfield",
     "@react-spectrum/statuslight",
+    "@react-spectrum/steplist",
     "@react-spectrum/switch",
     "@react-spectrum/table",
     "@react-spectrum/tabs",
