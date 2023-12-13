@@ -94,7 +94,7 @@ export function PromptBar({
                 ? "Describe the app or component you want to generate"
                 : "Describe the updates you would like to make"
             }
-            className="w-full bg-transparent resize-none p-50 focus:outline-none"
+            className="w-full bg-transparent resize-none p-50 h-1000 focus:outline-none"
           />
         </TextField>
         <div className="flex justify-between">
