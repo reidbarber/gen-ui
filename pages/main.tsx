@@ -12,17 +12,23 @@ import ThemeSwitcher from "../components/ThemeSwitcher";
 import NavBar from "../components/NavBar";
 import { Timeline } from "../components/Timeline";
 import { OpenInSandboxButton } from "../components/OpenInSandboxButton";
+import { Model } from "openai/resources";
+import { getImagesDescription } from "../api/vision";
 
 export default function Main({
   setColorScheme,
   colorScheme,
   assistantId,
+  models,
 }): JSX.Element {
   let [isGenerating, setIsGenerating] = useState(false);
   let [thread, setThread] = useState<Thread | null>(null);
   let [messages, setMessages] = useState<ThreadMessage[]>([]);
   let [selectedMessageId, setSelectedMessageId] = useState<Key | null>(null);
   let [promptValue, setPromptValue] = useState<string>("");
+  let hasVision = (models as Model[])?.some(
+    (model) => model.id === "gpt-4-vision-preview"
+  );
 
   let { sandpack, dispatch } = useSandpack();
   let { updateFile, addFile, deleteFile, error } = sandpack;
@@ -95,8 +101,21 @@ export default function Main({
     }
   };
 
-  let onSubmitPrompt = async (value: string) => {
+  let onSubmitPrompt = async (value: string, files: File[]) => {
     setIsGenerating(true);
+
+    // Get images descriptions if files are attached
+    if (files.length > 0) {
+      let imagesDescription = (await getImagesDescription({ images: files }))
+        .choices[0].message.content;
+      if (imagesDescription) {
+        value =
+          value +
+          "\n\n[UI design image description below]\n\n" +
+          imagesDescription;
+      }
+    }
+
     if (thread) {
       // Send message to existing thread
       let message = await createMessage(thread.id, {
@@ -172,6 +191,7 @@ export default function Main({
         onSubmit={onSubmitPrompt}
         promptValue={promptValue}
         setPromptValue={setPromptValue}
+        hasVision={hasVision}
       />
     </>
   );

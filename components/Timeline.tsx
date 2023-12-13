@@ -8,7 +8,7 @@ export function Timeline({
   isGenerating,
 }) {
   return (
-    <div className="w-3000 h-full pt-[45px] px-150">
+    <div className="w-3000 h-screen overflow-y-scrollyar pt-[45px] px-150">
       <h2 className="p-150">Timeline</h2>
       {messages.length <= 0 && (
         <div className="p-150">No prompts have been sent yet.</div>

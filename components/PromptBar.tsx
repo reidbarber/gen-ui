@@ -24,19 +24,17 @@ export function PromptBar({
   messages,
   promptValue,
   setPromptValue,
+  hasVision,
 }: {
-  onSubmit: (value: string) => void;
+  onSubmit: (value: string, files: File[]) => void;
   isGenerating: boolean;
   messages: ThreadMessage[];
   promptValue: string;
   setPromptValue: React.Dispatch<React.SetStateAction<string>>;
+  hasVision: boolean;
 }) {
-  let onFormSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    onSubmit(promptValue);
-  };
   let [isTextAreaFocused, setIsTextAreaFocused] = useState(false);
-  let [files, setFiles] = useState([]);
+  let [files, setFiles] = useState<File[]>([]);
   let ref = useRef(null);
   let { dropProps, isDropTarget } = useDrop({
     ref,
@@ -61,6 +59,11 @@ export function PromptBar({
     },
   });
 
+  let onFormSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    onSubmit(promptValue, files);
+  };
+
   return (
     <form
       onSubmit={onFormSubmit}
@@ -78,7 +81,7 @@ export function PromptBar({
           onKeyDown={(e) => {
             if (e.key === "Enter" && !e.shiftKey) {
               e.preventDefault();
-              onSubmit(promptValue);
+              onSubmit(promptValue, files);
             }
           }}
           value={promptValue}
@@ -94,61 +97,13 @@ export function PromptBar({
                 ? "Describe the app or component you want to generate"
                 : "Describe the updates you would like to make"
             }
-            className="w-full bg-transparent resize-none p-50 focus:outline-none"
+            className="w-full bg-transparent resize-none p-50 h-1000 focus:outline-none"
           />
         </TextField>
-        <div className="flex justify-between">
-          <div className="flex items-end gap-300">
-            {files.length === 0 && (
-              <FileTrigger
-                acceptedFileTypes={["image/*"]}
-                onSelect={(e) => {
-                  let files = Array.from(e);
-                  setFiles((prevFiles) => [...prevFiles, ...files]);
-                }}
-              >
-                <ActionButton aria-label="Upload image" isQuiet>
-                  <Image />
-                </ActionButton>
-              </FileTrigger>
-            )}
-
-            <div className="flex gap-150">
-              {files.map((file, index) => (
-                <div key={`${file.name}-${index}`} className="relative">
-                  <Button
-                    aria-label={`Remove image ${file.name}`}
-                    onPress={() =>
-                      setFiles((prevFiles) =>
-                        prevFiles.filter((prevFile) => prevFile !== file)
-                      )
-                    }
-                    className="absolute top-0 right-0 bg-gray-400 rounded-full outline-none -mt-75 -mr-75 h-200 w-200 focus-visible:outline"
-                  >
-                    <svg
-                      className="m-auto text-gray-800 w-75 h-75 dark:text-white"
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 14 14"
-                    >
-                      <path
-                        stroke="currentColor"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
-                      />
-                    </svg>
-                  </Button>
-                  <img
-                    alt="Image preview"
-                    className="object-cover border border-gray-300 rounded h-800 w-800"
-                    src={URL.createObjectURL(file)}
-                  />
-                </div>
-              ))}
-              {files.length > 0 && (
+        {hasVision && (
+          <div className="flex justify-between">
+            <div className="flex items-end gap-300">
+              {files.length === 0 && (
                 <FileTrigger
                   acceptedFileTypes={["image/*"]}
                   onSelect={(e) => {
@@ -156,26 +111,76 @@ export function PromptBar({
                     setFiles((prevFiles) => [...prevFiles, ...files]);
                   }}
                 >
-                  <Button
-                    className="border border-gray-300 rounded h-800 w-800"
-                    aria-label="Add image"
-                  >
-                    <ImageAdd />
-                  </Button>
+                  <ActionButton aria-label="Upload image" isQuiet>
+                    <Image />
+                  </ActionButton>
                 </FileTrigger>
               )}
-            </div>
-          </div>
 
-          <SpectrumButton
-            variant="cta"
-            type="submit"
-            isPending={isGenerating}
-            isDisabled={promptValue === ""}
-          >
-            {messages.length === 0 ? "Generate" : "Update"}
-          </SpectrumButton>
-        </div>
+              <div className="flex gap-150">
+                {files.map((file, index) => (
+                  <div key={`${file.name}-${index}`} className="relative">
+                    <Button
+                      aria-label={`Remove image ${file.name}`}
+                      onPress={() =>
+                        setFiles((prevFiles) =>
+                          prevFiles.filter((prevFile) => prevFile !== file)
+                        )
+                      }
+                      className="absolute top-0 right-0 bg-gray-400 rounded-full outline-none -mt-75 -mr-75 h-200 w-200 focus-visible:outline"
+                    >
+                      <svg
+                        className="m-auto text-gray-800 w-75 h-75 dark:text-white"
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 14 14"
+                      >
+                        <path
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                        />
+                      </svg>
+                    </Button>
+                    <img
+                      alt="Image preview"
+                      className="object-cover border border-gray-300 rounded h-800 w-800"
+                      src={URL.createObjectURL(file)}
+                    />
+                  </div>
+                ))}
+                {files.length > 0 && (
+                  <FileTrigger
+                    acceptedFileTypes={["image/*"]}
+                    onSelect={(e) => {
+                      let files = Array.from(e);
+                      setFiles((prevFiles) => [...prevFiles, ...files]);
+                    }}
+                  >
+                    <Button
+                      className="border border-gray-300 rounded h-800 w-800"
+                      aria-label="Add image"
+                    >
+                      <ImageAdd />
+                    </Button>
+                  </FileTrigger>
+                )}
+              </div>
+            </div>
+
+            <SpectrumButton
+              variant="cta"
+              type="submit"
+              isPending={isGenerating}
+              isDisabled={promptValue === "" && files.length === 0}
+            >
+              {messages.length === 0 ? "Generate" : "Update"}
+            </SpectrumButton>
+          </div>
+        )}
       </Group>
     </form>
   );

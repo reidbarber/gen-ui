@@ -6,7 +6,7 @@ export function Preview() {
     <SandpackPreview
       showOpenInCodeSandbox={false}
       showRefreshButton={false}
-      style={{ height: "100vh", paddingTop: 40 }}
+      style={{ height: "100vh", paddingTop: 48 }}
     />
   );
 }
