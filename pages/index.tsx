@@ -12,6 +12,7 @@ import { Assistant } from "openai/resources/beta/assistants/assistants";
 import { listAssistants } from "../api/assistants";
 import { AssistantDialog } from "../components/AssistantDialog";
 import Main from "./main";
+import { listModels } from "../api/models";
 
 export default function Home(): JSX.Element {
   let [colorScheme, setColorScheme] = useState<"light" | "dark">("dark"); // TODO: Default to system
@@ -27,6 +28,7 @@ export default function Home(): JSX.Element {
   );
   let assistantId = selectedAssistantId?.toString();
   let [showAssistantDialog, setShowAssistantDialog] = useState(true);
+  let [models, setModels] = useState(null);
 
   useEffect(() => {
     if (selectedAssistantId) {
@@ -45,6 +47,8 @@ export default function Home(): JSX.Element {
       let assistants = await listAssistants();
       setAssistants(assistants.data);
       setAssistantSelectorValue(assistants.data[0].id);
+      let myModels = await listModels();
+      setModels(myModels.data);
     })();
   }, []);
 
@@ -65,6 +69,7 @@ export default function Home(): JSX.Element {
             colorScheme={colorScheme}
             setColorScheme={setColorScheme}
             assistantId={assistantId}
+            models={models}
           />
         )}
       </SandpackProvider>
