@@ -1,4 +1,4 @@
-# GenUI Studio
+# GenUI
 
 Use text or image prompts to generate UI components and apps built with React. Powered by OpenAI's [Assistant's API](https://platform.openai.com/docs/assistants/overview) and CodeSandbox's [Sandpack](https://sandpack.codesandbox.io/).
 
