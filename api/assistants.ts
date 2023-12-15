@@ -1,7 +1,36 @@
-import { AssistantsPage } from "../data/types";
+import {
+  AssistantCreateParams,
+  AssistantUpdateParams,
+} from "openai/resources/beta/assistants/assistants";
+import { Assistant, AssistantsPage } from "../data/types";
 
 export async function listAssistants(): Promise<AssistantsPage> {
   return fetch("api/assistants", {
     method: "GET",
+  }).then((res) => res.json());
+}
+
+export async function createAssistant(
+  params: AssistantCreateParams
+): Promise<Assistant> {
+  return fetch("api/assistants", {
+    method: "POST",
+    body: JSON.stringify(params),
+  }).then((res) => res.json());
+}
+
+export async function updateAssistant(
+  assistant_id: string,
+  body: AssistantUpdateParams
+): Promise<Assistant> {
+  return fetch(`api/assistants/${assistant_id}`, {
+    method: "POST",
+    body: JSON.stringify(body),
+  }).then((res) => res.json());
+}
+
+export async function deleteAssistant(assistant_id: string): Promise<void> {
+  return fetch(`api/assistants/${assistant_id}`, {
+    method: "DELETE",
   }).then((res) => res.json());
 }

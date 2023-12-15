@@ -10,9 +10,11 @@ import { SandpackProvider } from "@codesandbox/sandpack-react";
 import { sandpackConfigs } from "../data/sandpack";
 import { Assistant } from "openai/resources/beta/assistants/assistants";
 import { listAssistants } from "../api/assistants";
-import { AssistantDialog } from "../components/AssistantDialog";
+import { SelectAssistantDialog } from "../components/SelectAssistantDialog";
 import Main from "./main";
 import { listModels } from "../api/models";
+import { CreateOrEditAssistantDialog } from "../components/CreateOrEditAssistantDialog";
+import { Model } from "openai/resources";
 
 export default function Home(): JSX.Element {
   let [colorScheme, setColorScheme] = useState<"light" | "dark">("dark"); // TODO: Default to system
@@ -27,8 +29,15 @@ export default function Home(): JSX.Element {
     null
   );
   let assistantId = selectedAssistantId?.toString();
-  let [showAssistantDialog, setShowAssistantDialog] = useState(true);
-  let [models, setModels] = useState(null);
+  let [showSelectAssistantDialog, setSelectShowSelectAssistantDialog] =
+    useState(true);
+  let [showCreateOrEditAssistantDialog, setCreateShowSelectAssistantDialog] =
+    useState(false);
+  let [models, setModels] = useState<Model[] | null>(null);
+  let [isEditMode, setIsEditMode] = useState<boolean>(false);
+  let [editingAssistant, setEditingAssistant] = useState<Assistant | null>(
+    null
+  );
 
   useEffect(() => {
     if (selectedAssistantId) {
@@ -51,6 +60,11 @@ export default function Home(): JSX.Element {
       setModels(myModels.data);
     })();
   }, []);
+
+  let refreshAssistants = async () => {
+    let assistants = await listAssistants();
+    setAssistants(assistants.data);
+  };
 
   return (
     <Provider colorScheme={colorScheme} theme={defaultTheme} locale="en-US">
@@ -75,15 +89,37 @@ export default function Home(): JSX.Element {
       </SandpackProvider>
       <DialogContainer
         isDismissable={false}
-        onDismiss={() => setShowAssistantDialog(false)}
+        onDismiss={() => setSelectShowSelectAssistantDialog(false)}
       >
-        {showAssistantDialog && (
-          <AssistantDialog
+        {showSelectAssistantDialog && (
+          <SelectAssistantDialog
             assistants={assistants}
             assistantSelectorValue={assistantSelectorValue}
             setAssistantSelectorValue={setAssistantSelectorValue}
-            setShowAssistantDialog={setShowAssistantDialog}
+            setSelectShowSelectAssistantDialog={
+              setSelectShowSelectAssistantDialog
+            }
             setSelectedAssistantId={setSelectedAssistantId}
+            setCreateShowSelectAssistantDialog={
+              setCreateShowSelectAssistantDialog
+            }
+            setIsEditMode={setIsEditMode}
+            setEditingAssistant={setEditingAssistant}
+            refreshAssistants={refreshAssistants}
+          />
+        )}
+        {showCreateOrEditAssistantDialog && (
+          <CreateOrEditAssistantDialog
+            models={models}
+            setSelectShowSelectAssistantDialog={
+              setSelectShowSelectAssistantDialog
+            }
+            setCreateShowSelectAssistantDialog={
+              setCreateShowSelectAssistantDialog
+            }
+            editingAssistant={editingAssistant}
+            setEditingAssistant={setEditingAssistant}
+            refreshAssistants={refreshAssistants}
           />
         )}
       </DialogContainer>
