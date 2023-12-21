@@ -64,7 +64,17 @@ export default function Main({
           };
           switch (toolCall.function.name) {
             case "updateFile":
-              updateFile(args.path, args.code);
+              if (args.replace) {
+                updateFile(
+                  args.path,
+                  sandpack.files[args.path].code.replace(
+                    args.replace,
+                    args.code
+                  )
+                );
+              } else {
+                updateFile(args.path, args.code);
+              }
               break;
             case "addFile":
               addFile(args.path, args.code);
