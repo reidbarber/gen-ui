@@ -14,27 +14,20 @@ import {
   TextArea,
   TextField,
 } from "@adobe/react-spectrum";
-import { Model } from "openai/resources";
 import { FormEvent, useRef, useState } from "react";
 import { createAssistant, updateAssistant } from "../api/assistants";
 import { instructions as defaultInstructions, tools } from "../data/assistants";
-import { Assistant } from "../data/types";
+import { useAssistant } from "../context/AssistantContext";
+import { useModels } from "../context/ModelsContext";
 
-export function CreateOrEditAssistantDialog({
-  models,
-  setSelectShowSelectAssistantDialog,
-  setCreateShowSelectAssistantDialog,
-  editingAssistant,
-  setEditingAssistant,
-  refreshAssistants,
-}: {
-  models: Model[];
-  setSelectShowSelectAssistantDialog: (value: boolean) => void;
-  setCreateShowSelectAssistantDialog: (value: boolean) => void;
-  editingAssistant?: Assistant;
-  setEditingAssistant: (value: Assistant | null) => void;
-  refreshAssistants: () => Promise<void>;
-}) {
+export function CreateOrEditAssistantDialog() {
+  let { models } = useModels();
+  let {
+    refreshAssistants,
+    editingAssistant,
+    setSelectShowSelectAssistantDialog,
+    setCreateShowSelectAssistantDialog,
+  } = useAssistant();
   let [name, setName] = useState<string>(editingAssistant?.name || "");
   let [description, setDescription] = useState<string>(
     editingAssistant?.description || ""
