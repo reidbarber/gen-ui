@@ -7,8 +7,10 @@ import React from "react";
 import MonacoEditor from "@monaco-editor/react";
 import { getLanguageOfFile } from "../utils/utils";
 import { FileTabs } from "./FileTabs";
+import { useColorScheme } from "../context/ColorSchemeContext";
 
-export function Editor({ colorScheme }) {
+export function Editor() {
+  let { colorScheme } = useColorScheme();
   const { code, updateCode } = useActiveCode();
   const { sandpack } = useSandpack();
 

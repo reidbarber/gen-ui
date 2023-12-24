@@ -12,23 +12,24 @@ import {
   ProgressCircle,
   ActionMenu,
 } from "@adobe/react-spectrum";
-import { DialogTrigger, Radio, RadioGroup } from "react-aria-components";
 import { Assistant } from "../data/types";
 import Edit from "@spectrum-icons/workflow/Edit";
 import Delete from "@spectrum-icons/workflow/Delete";
 import { deleteAssistant } from "../api/assistants";
+import { useAssistant } from "../context/AssistantContext";
 
-export function SelectAssistantDialog({
-  assistants,
-  assistantSelectorValue,
-  setAssistantSelectorValue,
-  setSelectShowSelectAssistantDialog,
-  setSelectedAssistantId,
-  setCreateShowSelectAssistantDialog,
-  setIsEditMode,
-  setEditingAssistant,
-  refreshAssistants,
-}) {
+export function SelectAssistantDialog() {
+  let {
+    assistants,
+    assistantSelectorValue,
+    setAssistantSelectorValue,
+    setSelectedAssistantId,
+    refreshAssistants,
+    setEditingAssistant,
+    setSelectShowSelectAssistantDialog,
+    setCreateShowSelectAssistantDialog,
+  } = useAssistant();
+
   return (
     <Dialog>
       <Heading>Select an Assistant</Heading>
@@ -67,7 +68,6 @@ export function SelectAssistantDialog({
                   if (key === "edit") {
                     setSelectShowSelectAssistantDialog(false);
                     setCreateShowSelectAssistantDialog(true);
-                    setIsEditMode(true);
                     setEditingAssistant(item);
                   } else if (key === "delete") {
                     await deleteAssistant(item.id);

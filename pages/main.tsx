@@ -14,13 +14,12 @@ import { Timeline } from "../components/Timeline";
 import { OpenInSandboxButton } from "../components/OpenInSandboxButton";
 import { Model } from "openai/resources";
 import { getImagesDescription } from "../api/vision";
+import { useAssistant } from "../context/AssistantContext";
+import { useModels } from "../context/ModelsContext";
 
-export default function Main({
-  setColorScheme,
-  colorScheme,
-  assistantId,
-  models,
-}): JSX.Element {
+export default function Main(): JSX.Element {
+  let { models } = useModels();
+  let { assistantId } = useAssistant();
   let [isGenerating, setIsGenerating] = useState(false);
   let [thread, setThread] = useState<Thread | null>(null);
   let [messages, setMessages] = useState<ThreadMessage[]>([]);
@@ -173,7 +172,7 @@ export default function Main({
           setSelectedMessageId={setSelectedMessageId}
           isGenerating={isGenerating}
         />
-        <Editor colorScheme={colorScheme} />
+        <Editor />
         <Preview />
         <NavBar>
           <div className="absolute text-2xl font-bold w-3000 left-75 py-100 px-150">
@@ -181,7 +180,7 @@ export default function Main({
           </div>
           <div className="absolute flex gap-100 right-100 pt-50">
             <OpenInSandboxButton />
-            <ThemeSwitcher setColorScheme={setColorScheme} />
+            <ThemeSwitcher />
           </div>
         </NavBar>
       </SandpackLayout>
