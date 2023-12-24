@@ -41,6 +41,7 @@ export function SelectAssistantDialog() {
           </div>
         )}
         <ListView
+          isQuiet
           selectedKeys={[assistantSelectorValue]}
           onSelectionChange={(keys) => {
             setAssistantSelectorValue([...keys][0]);

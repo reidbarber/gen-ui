@@ -27,6 +27,7 @@ export function CreateOrEditAssistantDialog() {
     editingAssistant,
     setSelectShowSelectAssistantDialog,
     setCreateShowSelectAssistantDialog,
+    setEditingAssistant,
   } = useAssistant();
   let [name, setName] = useState<string>(editingAssistant?.name || "");
   let [description, setDescription] = useState<string>(
