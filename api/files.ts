@@ -1,4 +1,5 @@
 import { FileListParams, MessageFile, MessageFilesPage } from "../data/types";
+import { ToastQueue } from "@react-spectrum/toast";
 
 const headers = {
   "Content-Type": "application/json",
@@ -15,7 +16,11 @@ export async function getFile(
       method: "GET",
       headers,
     }
-  ).then((res) => res.json());
+  )
+    .then((res) => res.json())
+    .catch((err) => {
+      ToastQueue.negative(err);
+    });
 }
 
 export async function listFiles(
@@ -29,5 +34,9 @@ export async function listFiles(
       method: "GET",
       headers,
     }
-  ).then((res) => res.json());
+  )
+    .then((res) => res.json())
+    .catch((err) => {
+      ToastQueue.negative(err);
+    });
 }

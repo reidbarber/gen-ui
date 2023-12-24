@@ -5,6 +5,7 @@ import {
   ThreadMessagesPage,
   MessageUpdateParams,
 } from "../data/types";
+import { ToastQueue } from "@react-spectrum/toast";
 
 const headers = {
   "Content-Type": "application/json",
@@ -18,7 +19,11 @@ export async function createMessage(
     method: "POST",
     headers,
     body: JSON.stringify(body),
-  }).then((res) => res.json());
+  })
+    .then((res) => res.json())
+    .catch((err) => {
+      ToastQueue.negative(err);
+    });
 }
 
 export async function getMessage(
@@ -28,7 +33,11 @@ export async function getMessage(
   return fetch(`api/threads/${thread_id}/messages/${message_id}`, {
     method: "GET",
     headers,
-  }).then((res) => res.json());
+  })
+    .then((res) => res.json())
+    .catch((err) => {
+      ToastQueue.negative(err);
+    });
 }
 
 export async function updateMessage(
@@ -40,7 +49,11 @@ export async function updateMessage(
     method: "POST",
     headers,
     body: JSON.stringify(body),
-  }).then((res) => res.json());
+  })
+    .then((res) => res.json())
+    .catch((err) => {
+      ToastQueue.negative(err);
+    });
 }
 
 export async function listMessages(
@@ -50,5 +63,9 @@ export async function listMessages(
   return fetch(`api/threads/${thread_id}/messages?${query}`, {
     method: "GET",
     headers,
-  }).then((res) => res.json());
+  })
+    .then((res) => res.json())
+    .catch((err) => {
+      ToastQueue.negative(err);
+    });
 }

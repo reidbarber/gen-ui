@@ -8,6 +8,7 @@ import {
   RunsPage,
   ThreadCreateAndRunParams,
 } from "../data/types";
+import { ToastQueue } from "@react-spectrum/toast";
 
 export async function createRun(
   thread_id: string,
@@ -16,13 +17,21 @@ export async function createRun(
   return fetch(`api/threads/${thread_id}/runs`, {
     method: "POST",
     body: JSON.stringify(body),
-  }).then((res) => res.json());
+  })
+    .then((res) => res.json())
+    .catch((err) => {
+      ToastQueue.negative(err);
+    });
 }
 
 export async function getRun(thread_id: string, run_id: string): Promise<Run> {
   return fetch(`api/threads/${thread_id}/runs/${run_id}`, {
     method: "GET",
-  }).then((res) => res.json());
+  })
+    .then((res) => res.json())
+    .catch((err) => {
+      ToastQueue.negative(err);
+    });
 }
 
 export async function updateRun(
@@ -33,13 +42,21 @@ export async function updateRun(
   return fetch(`api/threads/${thread_id}/runs/${run_id}`, {
     method: "POST",
     body: JSON.stringify(body),
-  }).then((res) => res.json());
+  })
+    .then((res) => res.json())
+    .catch((err) => {
+      ToastQueue.negative(err);
+    });
 }
 
 export async function listRuns(thread_id: string): Promise<RunsPage> {
   return fetch(`api/threads/${thread_id}/runs`, {
     method: "GET",
-  }).then((res) => res.json());
+  })
+    .then((res) => res.json())
+    .catch((err) => {
+      ToastQueue.negative(err);
+    });
 }
 
 export async function submitToolOutputs(
@@ -50,7 +67,11 @@ export async function submitToolOutputs(
   return fetch(`api/threads/${thread_id}/runs/${run_id}/submit_tool_outputs`, {
     method: "POST",
     body: JSON.stringify(body),
-  }).then((res) => res.json());
+  })
+    .then((res) => res.json())
+    .catch((err) => {
+      ToastQueue.negative(err);
+    });
 }
 
 export async function cancelRun(
@@ -59,7 +80,11 @@ export async function cancelRun(
 ): Promise<Run> {
   return fetch(`api/threads/${thread_id}/runs/${run_id}/cancel`, {
     method: "POST",
-  }).then((res) => res.json());
+  })
+    .then((res) => res.json())
+    .catch((err) => {
+      ToastQueue.negative(err);
+    });
 }
 
 export async function createThreadAndRun(
@@ -68,7 +93,11 @@ export async function createThreadAndRun(
   return fetch(`api/threads/runs`, {
     method: "POST",
     body: JSON.stringify(body),
-  }).then((res) => res.json());
+  })
+    .then((res) => res.json())
+    .catch((err) => {
+      ToastQueue.negative(err);
+    });
 }
 
 export async function getRunStep(
@@ -78,7 +107,11 @@ export async function getRunStep(
 ): Promise<Run> {
   return fetch(`api/threads/${thread_id}/runs/${run_id}/steps/${step_id}`, {
     method: "GET",
-  }).then((res) => res.json());
+  })
+    .then((res) => res.json())
+    .catch((err) => {
+      ToastQueue.negative(err);
+    });
 }
 
 export async function listRunSteps(
@@ -95,5 +128,9 @@ export async function listRunSteps(
     {
       method: "GET",
     }
-  ).then((res) => res.json());
+  )
+    .then((res) => res.json())
+    .catch((err) => {
+      ToastQueue.negative(err);
+    });
 }
