@@ -52,6 +52,7 @@ module.exports = {
     "@react-spectrum/theme-dark",
     "@react-spectrum/theme-default",
     "@react-spectrum/theme-light",
+    "@react-spectrum/toast",
     "@react-spectrum/tooltip",
     "@react-spectrum/view",
     "@react-spectrum/well",

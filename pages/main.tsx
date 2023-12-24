@@ -16,6 +16,7 @@ import { Model } from "openai/resources";
 import { getImagesDescription } from "../api/vision";
 import { useAssistant } from "../context/AssistantContext";
 import { useModels } from "../context/ModelsContext";
+import { ToastQueue } from "@react-spectrum/toast";
 
 export default function Main(): JSX.Element {
   let { models } = useModels();
@@ -47,7 +48,7 @@ export default function Main(): JSX.Element {
       run.status === "failed" ||
       run.status === "expired"
     ) {
-      throw new Error(run.status); // TODO: Show alert
+      ToastQueue.negative(run.status);
     }
 
     if (
@@ -81,7 +82,7 @@ export default function Main(): JSX.Element {
               output["result"] = { paths: Object.keys(sandpack.files) };
               break;
             default:
-              throw new Error(
+              ToastQueue.negative(
                 `Unknown tool call function: ${toolCall.function.name}`
               );
           }

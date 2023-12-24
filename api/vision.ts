@@ -1,4 +1,5 @@
 import { ChatCompletion } from "openai/resources";
+import { ToastQueue } from "@react-spectrum/toast";
 
 const headers = {
   "Content-Type": "application/json",
@@ -23,5 +24,9 @@ export async function getImagesDescription(body: {
     method: "POST",
     headers,
     body: JSON.stringify({ images: base64Images }),
-  }).then((res) => res.json());
+  })
+    .then((res) => res.json())
+    .catch((err) => {
+      ToastQueue.negative(err);
+    });
 }
