@@ -37,6 +37,11 @@ export const tools = [
             type: "string",
             description: "File path",
           },
+          replace: {
+            type: "string",
+            description:
+              "Pattern to replace with the new code. Matches the String.prototype.replace() pattern argument, where it be a string or a RegExp. If not provided, the new code will replace the current file entirely.",
+          },
           code: {
             type: "string",
             description: "Updated code",
